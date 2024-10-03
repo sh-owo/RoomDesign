@@ -10,30 +10,43 @@ public class StuffPlace : MonoBehaviour
     void Update()
     {
         MouseDirect();
+        PutStuff();
+        DeleteStuff();
+    }
+    
+    private void PutStuff()
+    {
         if (Input.GetKeyDown(KeyCode.F))
         {
             Instantiate(stuff, pos, Quaternion.identity);
         }
     }
-
-    private void MouseDirect()
+    
+    private void DeleteStuff()
     {
-        if (Input.GetKey(KeyCode.Mouse0))
+        if (Input.GetKeyDown(KeyCode.G))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
-                pos = hit.point;
-                Debug.Log("Pos" + hit.point);
+                Debug.Log("Hit" + hit.collider.gameObject.tag);
+                if (hit.collider.gameObject.CompareTag("Stuff"))
+                {
+                    Destroy(hit.collider.gameObject);
+                }
             }
         }
     }
-    private void OnDrawGizmos()
+
+    private void MouseDirect()
     {
-        if (pos != null)
+        
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit hit))
         {
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(Camera.main.transform.position, pos);
+            pos = hit.point;
+            Debug.Log("Pos" + hit.point);
         }
+        
     }
 }
