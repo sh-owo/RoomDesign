@@ -10,8 +10,8 @@
 
 
 ### 이건 선택임
-대충 개발이면 dev/feature에서 만들기능 브랜치 이름 쓰시고 만드세요
-main, dev, feature, bugfix 브랜치 이렇게 잇을듯?
+-대충 개발이면 dev/feature에서 만들기능 브랜치 이름 쓰시고 만드세요
+-main, dev, feature, bugfix 브랜치 이렇게 잇을듯?
 
 
 
