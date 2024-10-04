@@ -45,7 +45,7 @@ public class StuffPlace : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
             pos = hit.point;
-            Debug.Log("Pos" + hit.point);
+            // Debug.Log("Pos" + hit.point);
         }
         
     }
