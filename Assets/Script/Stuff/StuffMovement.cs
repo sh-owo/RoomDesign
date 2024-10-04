@@ -9,23 +9,25 @@ public class StuffMovement : MonoBehaviour
     private Renderer objectRenderer;
     private Rigidbody rb;
 
-    private bool isColliding = false;
-    private bool hasMoved = false;
+    private bool hasColided = false;
     private bool collisionDetected = false;
 
     void Start()
     {
         objectRenderer = GetComponent<Renderer>();
         rb = GetComponent<Rigidbody>();
-        // objectRenderer.enabled = false;
+        rb.useGravity = true; 
     }
 
     void FixedUpdate()
     {
-        if (collisionDetected)
+        if (collisionDetected && !hasColided)
         {
             transform.position += movePos * Time.fixedDeltaTime;
-            collisionDetected = false; 
+        }
+        if(collisionDetected && rb.velocity.magnitude > 9.81f)
+        {
+            Freeze();
         }
     }
 
@@ -33,17 +35,24 @@ public class StuffMovement : MonoBehaviour
     {
         foreach (ContactPoint contact in other.contacts)
         {
-            isColliding = true;
-            movePos = -contact.normal * 0.001f;
+            movePos = -contact.normal * 0.001f; 
             collisionDetected = true; 
         }
     }
 
     private void OnCollisionExit(Collision other)
     {
-        isColliding = false;
-        // objectRenderer.enabled = true;
-        rb.isKinematic = true;
-        rb.isKinematic = false;
+        collisionDetected = false;
+        if (!hasColided)
+        {
+            Freeze();
+            hasColided = true;
+        }
+    }
+
+    private void Freeze()
+    {
+        rb.isKinematic = true; 
+        rb.isKinematic = false; 
     }
 }
