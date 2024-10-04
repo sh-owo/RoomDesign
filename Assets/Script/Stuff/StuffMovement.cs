@@ -6,51 +6,44 @@ using UnityEngine;
 public class StuffMovement : MonoBehaviour
 {
     private Vector3 movePos;
-    private bool isColliding = false;
-    private bool isOutside = true;
     private Renderer objectRenderer;
     private Rigidbody rb;
-    
-    
+
+    private bool isColliding = false;
+    private bool hasMoved = false;
+    private bool collisionDetected = false;
+
     void Start()
     {
         objectRenderer = GetComponent<Renderer>();
         rb = GetComponent<Rigidbody>();
-        objectRenderer.enabled = false; 
+        // objectRenderer.enabled = false;
     }
 
-    
     void FixedUpdate()
     {
-        if (isColliding) { transform.position += movePos * Time.fixedDeltaTime; Debug.Log("Moved"+movePos);}
+        if (collisionDetected)
+        {
+            transform.position += movePos * Time.fixedDeltaTime;
+            collisionDetected = false; 
+        }
     }
 
     private void OnCollisionEnter(Collision other)
     {
-        if (!isOutside)
-        {  
-            foreach (ContactPoint contact in other.contacts)
-            {
-                isColliding = true;
-                movePos = -contact.normal; 
-            }
-
-        }
-        if(other.gameObject.CompareTag("Wall"))
+        foreach (ContactPoint contact in other.contacts)
         {
-            // Debug.Log("Wall");
-            objectRenderer.enabled = true; 
+            isColliding = true;
+            movePos = -contact.normal * 0.001f;
+            collisionDetected = true; 
         }
     }
 
     private void OnCollisionExit(Collision other)
     {
-        isOutside = true;
         isColliding = false;
-        objectRenderer.enabled = true;
+        // objectRenderer.enabled = true;
         rb.isKinematic = true;
+        rb.isKinematic = false;
     }
-    
-    
-    
 }
