@@ -12,7 +12,7 @@ public class CameraMovement : MonoBehaviour
     private Quaternion targetRotation;
     private bool isColiding = false;
 
-    [Range(1, 10)] public float speed = 5;
+    [Range(1, 20)] public float speed = 5;
     
     [SerializeField] private float sensitivity;
     
@@ -42,7 +42,7 @@ public class CameraMovement : MonoBehaviour
         if (Input.GetKey(KeyCode.S)) { move -= transform.forward; }
         if (Input.GetKey(KeyCode.W)) { move += transform.forward; }
         
-        rb.AddForce(move * 10 * Time.deltaTime, ForceMode.VelocityChange);
+        rb.AddForce(move * speed * Time.deltaTime, ForceMode.VelocityChange);
     }
 
     private void CameraRotation()
