@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Stuff : MonoBehaviour
+public class PlaceDestry : MonoBehaviour
 {
     private Rigidbody rb;
     private List<GameObject> stufflist;
