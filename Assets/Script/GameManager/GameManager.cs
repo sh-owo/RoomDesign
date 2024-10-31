@@ -5,9 +5,11 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     //TODO: 1번이 기본이되는 건설설정(F,G) 2번이 건설한거 움직이는기능(이동,회전)
-    //TODO: 물건 배치되는 느낌을 바꿔야함 왜냐하면 지금 배치하면 물건이 튀어다님 그래서 저항 씨게 넣어놨는데 이상함
+    //TODO: stuffClass: stuff, 정상적으로 배치되기 위한 pos, 
     public static GameManager Instance { get; private set; }
     public List<GameObject> stuffList = new List<GameObject>();
+    public int moveMode = 1; //1: 기본, 2: 물건이동, 3: 물건회전
+    public bool isMoving = false;
 
     private void Awake()
     {
@@ -22,8 +24,5 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
-        stuffList.AddRange(Resources.LoadAll<GameObject>("Prefabs"));
-        Debug.Log("StuffList Count: " + stuffList.Count);
     }
 }
