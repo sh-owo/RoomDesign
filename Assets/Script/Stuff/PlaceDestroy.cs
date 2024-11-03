@@ -10,7 +10,6 @@ public class PlaceDestry : MonoBehaviour
 
     void Start()
     {
-        // Start에서 초기화를 시도하고, 실패하면 코루틴으로 재시도
         if (!InitializeStuffList())
         {
             StartCoroutine(WaitForGameManager());
