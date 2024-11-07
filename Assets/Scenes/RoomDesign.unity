@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 435020539}
   - component: {fileID: 435020538}
   - component: {fileID: 435020537}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cube
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -421,7 +421,7 @@ GameObject:
   - component: {fileID: 794913376}
   - component: {fileID: 794913375}
   - component: {fileID: 794913374}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cube (2)
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -526,7 +526,7 @@ GameObject:
   - component: {fileID: 1191657249}
   - component: {fileID: 1191657248}
   - component: {fileID: 1191657247}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cube (1)
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -789,6 +789,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27a923281eaa7452dbedfc7fb1d39a7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stuffList:
+  - {fileID: 6727683441578239698, guid: 74600d9f2b8f046d1aeb96e99c6c953a, type: 3}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 8
+  gridSize: 0.5
+  gridToggle: 1
 --- !u!1 &1997701336
 GameObject:
   m_ObjectHideFlags: 0
