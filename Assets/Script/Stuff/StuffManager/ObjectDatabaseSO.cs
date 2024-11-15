@@ -22,6 +22,6 @@ public class ObjectData
     public int ID { get; private set; }
     
     [field:SerializeField]
-    public float Offset { get; private set; }
+    public float yOffset { get; private set; }
     
 }

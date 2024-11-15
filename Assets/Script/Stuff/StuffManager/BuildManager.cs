@@ -57,30 +57,73 @@ public class BuildManager : MonoBehaviour
         canPlace = !CheckCollision();
         
         // 배치 가능 여부에 따라 머티리얼 변경
-        previewRenderer.material = canPlace ? validPlacementMaterial : invalidPlacementMaterial;
+        UpdatePreviewMaterials(canPlace ? validPlacementMaterial : invalidPlacementMaterial);
         previewObject.GetComponent<Collider>().enabled = false;
     }
 
     bool CheckCollision()
     {
-        // 오브젝트의 콜라이더 크기를 기반으로 충돌 체크
         Collider previewCollider = previewObject.GetComponent<Collider>();
         Vector3 center = previewObject.transform.position;
         Vector3 halfExtents = previewCollider.bounds.extents;
 
-        // 모든 레이어의 오브젝트와 충돌 검사
+        // 충돌 검사
         Collider[] colliders = Physics.OverlapBox(center, halfExtents, previewObject.transform.rotation);
-        return colliders.Length > 0;
+    
+        // 자신의 콜라이더를 제외한 충돌 검사
+        foreach (Collider collider in colliders)
+        {
+            // 자기 자신이나 자식 오브젝트가 아닌 경우에만 충돌로 간주
+            if (collider.gameObject != previewObject && !collider.transform.IsChildOf(previewObject.transform))
+            {
+                return true;
+            }
+        }
+    
+        return false;
+    }
+    
+    private void UpdatePreviewMaterials(Material material)
+    {
+        // 자신의 Renderer가 있다면 변경
+        Renderer renderer = previewObject.GetComponent<Renderer>();
+        if (renderer != null)
+        {
+            renderer.material = material;
+        }
+
+        // 모든 자식 오브젝트의 Renderer 찾아서 Material 변경
+        Renderer[] childRenderers = previewObject.GetComponentsInChildren<Renderer>();
+        foreach (Renderer childRenderer in childRenderers)
+        {
+            childRenderer.material = material;
+        }
     }
 
     void HandlePlacement()
     {
+        Debug.Log(canPlace);
         if (Input.GetKeyDown(KeyCode.F) && canPlace)
         {
+            Debug.Log("Placed object");
             // 실제 오브젝트 배치
             GameObject placedObject = Instantiate(objectToPlace, currentPosition, previewObject.transform.rotation);
             placedObject.GetComponent<Collider>().enabled = true;
+            placedObject.layer = LayerMask.NameToLayer("Objects");
             
+            //TODO: 이거 rigidbody를 멍추게 하던가 아님 다르게 하던가 해야함
+            Rigidbody[] rigidbodies = placedObject.GetComponentsInChildren<Rigidbody>();
+            foreach (Rigidbody rb in rigidbodies)
+            {
+                rb.isKinematic = true;
+            }
+        
+            // 본체에 Rigidbody가 없는 경우 추가
+            if (placedObject.GetComponent<Rigidbody>() == null)
+            {
+                Rigidbody rb = placedObject.AddComponent<Rigidbody>();
+                rb.isKinematic = true;
+            }
             
         }
     }

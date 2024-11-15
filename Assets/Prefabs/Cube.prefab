@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3335128898084567973}
   - component: {fileID: 3668116051356407066}
   - component: {fileID: 6102879731749037224}
-  m_Layer: 3
+  m_Layer: 6
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -117,7 +117,7 @@ GameObject:
   - component: {fileID: 4615571233521867367}
   - component: {fileID: 5534002004450508506}
   - component: {fileID: 5177702826004860543}
-  m_Layer: 3
+  m_Layer: 6
   m_Name: Cube
   m_TagString: Stuff
   m_Icon: {fileID: 0}
@@ -207,7 +207,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 64
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!65 &5177702826004860543
 BoxCollider:
