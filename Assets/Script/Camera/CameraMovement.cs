@@ -5,18 +5,18 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
-    private Camera camera;
-    private float movementSpeed = 5f;
+    private new Camera camera;
+    private Rigidbody rb;
     private Vector3 targetPosition;
     private Quaternion targetRotation;
-    private bool isColiding = false;
-    
+
+    [Range(1, 20)] public float speed = 5;
+
     [SerializeField] private float sensitivity;
-    
-    
 
     private void Awake()
     {
+        rb = GetComponent<Rigidbody>();
         camera = GetComponent<Camera>();
         targetPosition = transform.position;
         targetRotation = transform.rotation;
@@ -38,10 +38,7 @@ public class CameraMovement : MonoBehaviour
         if (Input.GetKey(KeyCode.S)) { move -= transform.forward; }
         if (Input.GetKey(KeyCode.W)) { move += transform.forward; }
 
-        if (isColiding) { targetPosition += move * movementSpeed / 3 * Time.deltaTime;}
-        else{targetPosition += move * movementSpeed * Time.deltaTime;}
-        float lerpvalue = Time.deltaTime * 5;
-        transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * 5);
+        rb.AddForce(move * speed * Time.deltaTime, ForceMode.VelocityChange);
     }
 
     private void CameraRotation()
@@ -59,6 +56,5 @@ public class CameraMovement : MonoBehaviour
     private void OnCollisionEnter(Collision other)
     {
         Debug.Log(other.transform.name);
-        isColiding = true;
     }
 }
