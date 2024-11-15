@@ -420,10 +420,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27a923281eaa7452dbedfc7fb1d39a7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mouseIndicator: {fileID: 1885769493}
-  inputManager: {fileID: 250235144}
-  grid: {fileID: 981868725}
-  database: {fileID: 0}
+  objectToPlace: {fileID: 6727683441578239698, guid: 74600d9f2b8f046d1aeb96e99c6c953a, type: 3}
+  placementHeight: 0.5
+  validPlacementMaterial: {fileID: 2100000, guid: efbebf14743ce4354851dd4d5d079b68, type: 2}
+  invalidPlacementMaterial: {fileID: 2100000, guid: f32213f2926dc41609333573e46cc714, type: 2}
+  maxPlacementDistance: 100
+  ignoreLayers:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &580169640
 GameObject:
   m_ObjectHideFlags: 0

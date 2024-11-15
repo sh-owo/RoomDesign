@@ -22,6 +22,6 @@ public class ObjectData
     public int ID { get; private set; }
     
     [field:SerializeField]
-    public Vector2Int Size { get; private set; } = Vector2Int.one;
+    public float Offset { get; private set; }
     
 }
