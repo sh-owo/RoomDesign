@@ -65,21 +65,39 @@ public class BuildManager : MonoBehaviour
     {
         Collider previewCollider = previewObject.GetComponent<Collider>();
         Vector3 center = previewObject.transform.position;
-        Vector3 halfExtents = previewCollider.bounds.extents;
+        Vector3 size = previewCollider.bounds.size;
+        Vector3 halfExtents = size / 2f;
 
-        // 충돌 검사
-        Collider[] colliders = Physics.OverlapBox(center, halfExtents, previewObject.transform.rotation);
-    
-        // 자신의 콜라이더를 제외한 충돌 검사
-        foreach (Collider collider in colliders)
+        Vector3[] checkPoints = new Vector3[]
         {
-            // 자기 자신이나 자식 오브젝트가 아닌 경우에만 충돌로 간주
-            if (collider.gameObject != previewObject && !collider.transform.IsChildOf(previewObject.transform))
+            center,  
+            center + new Vector3(halfExtents.x, 0, 0),  // 오른쪽
+            center - new Vector3(halfExtents.x, 0, 0),  // 왼쪽
+            center + new Vector3(0, halfExtents.y, 0),  // 위
+            center - new Vector3(0, halfExtents.y, 0),  // 아래
+            center + new Vector3(0, 0, halfExtents.z),  // 앞
+            center - new Vector3(0, 0, halfExtents.z)   // 뒤
+        };
+
+        foreach (Vector3 checkPoint in checkPoints)
+        {
+            Collider[] colliders = Physics.OverlapBox(
+                checkPoint,
+                halfExtents * 0.8f,  
+                previewObject.transform.rotation
+            );
+
+            foreach (Collider collider in colliders)
             {
-                return true;
+                if (collider.gameObject != previewObject && 
+                    !collider.transform.IsChildOf(previewObject.transform) &&
+                    !previewObject.transform.IsChildOf(collider.transform))
+                {
+                    return true;
+                }
             }
         }
-    
+
         return false;
     }
     
