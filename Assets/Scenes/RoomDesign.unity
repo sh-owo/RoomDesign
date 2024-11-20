@@ -428,6 +428,7 @@ MonoBehaviour:
   ignoreLayers:
     serializedVersion: 2
     m_Bits: 64
+  rotationSpeed: 0.1
 --- !u!1 &580169640
 GameObject:
   m_ObjectHideFlags: 0
@@ -1136,11 +1137,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd281b4e14cad415b8b439db7450c0f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stuffList:
-  - {fileID: 6727683441578239698, guid: 74600d9f2b8f046d1aeb96e99c6c953a, type: 3}
-  - {fileID: 1627388342449283037, guid: 3fd45ac3aaff94f56b8da3a6a3a43345, type: 3}
   moveMode: 1
-  isMoving: 0
+  CurrentMode: 0
 --- !u!4 &1997701338
 Transform:
   m_ObjectHideFlags: 0
