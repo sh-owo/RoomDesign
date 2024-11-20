@@ -16,8 +16,13 @@ MonoBehaviour:
   - <Name>k__BackingField: TestCube
     <Prefab>k__BackingField: {fileID: 6727683441578239698, guid: 74600d9f2b8f046d1aeb96e99c6c953a, type: 3}
     <ID>k__BackingField: 1
-    <Size>k__BackingField: {x: 2, y: 1}
+    <yOffset>k__BackingField: 0
+    <Price>k__BackingField: 0
+    <Tags>k__BackingField: []
   - <Name>k__BackingField: TestSphere
     <Prefab>k__BackingField: {fileID: 1627388342449283037, guid: 3fd45ac3aaff94f56b8da3a6a3a43345, type: 3}
     <ID>k__BackingField: 2
-    <Size>k__BackingField: {x: 1, y: 1}
+    <yOffset>k__BackingField: 0
+    <Price>k__BackingField: 0
+    <Tags>k__BackingField:
+    - 
