@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Stuff
   - Wall
+  - Book
   layers:
   - Default
   - TransparentFX
