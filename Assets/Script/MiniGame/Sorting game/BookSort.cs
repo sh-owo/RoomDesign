@@ -5,9 +5,9 @@ using TMPro; // TextMeshPro를 사용하려면 추가
 public class BookSort : MonoBehaviour
 {
     public GameObject objectPrefab; 
-    public GameObject booksParent; 
-    public int objectCount;
+    public GameObject booksParent;
     
+    private int objectCount = 20;
     public static List<int> objectNumbers = new List<int>();
     private int placedIndex = 0;
     private const int rowSize = 10;
