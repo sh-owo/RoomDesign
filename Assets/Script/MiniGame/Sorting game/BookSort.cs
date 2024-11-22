@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro; // TextMeshPro를 사용하려면 추가
 
-public class ObjectSpawner : MonoBehaviour
+public class BookSort : MonoBehaviour
 {
     public GameObject objectPrefab; 
     public GameObject booksParent; 
@@ -51,9 +51,10 @@ public class ObjectSpawner : MonoBehaviour
         Debug.Log("spawned");
 
         GameObject newObject = Instantiate(objectPrefab);
+        newObject.name = "Book " + index;
         newObject.transform.SetParent(booksParent.transform);
         
-        newObject.transform.position = new Vector3(placedIndex % rowSize - (rowSize / 2), placedIndex / rowSize, 0);
+        newObject.transform.position = new Vector3((float)(placedIndex % rowSize - (rowSize / 2)) / 2.5f, - placedIndex / rowSize + (objectCount / rowSize), 0);
         placedIndex++;
 
         UpdateObjectNumber(newObject, index);
