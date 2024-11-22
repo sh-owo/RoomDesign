@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
 
     public enum StuffMode
     {
-        Default,
+        Default = 0,
         Move,
         Rotate
     }
