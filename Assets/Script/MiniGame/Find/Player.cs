@@ -19,6 +19,12 @@ public class Player : MonoBehaviour
 
         speed = FindGameManager.Instance.speed;
         rotationSpeed = FindGameManager.Instance.rotationSpeed;
+        
+        int random = UnityEngine.Random.Range(0, FindGameManager.Instance.spawnPos.Count - 1);
+        Vector3 newPosition = FindGameManager.Instance.spawnPos[random].transform.position;
+        newPosition.x += 1.5f;
+        transform.position = newPosition;
+        transform.rotation = Quaternion.Euler(0f, UnityEngine.Random.Range(0f, 360f), 0f);
     }
 
     void Update()

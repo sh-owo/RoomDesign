@@ -24,8 +24,7 @@ public class AIAgent : Agent
         rb.angularVelocity = Vector3.zero;
         List<GameObject> posList = FindGameManager.Instance.spawnPos;
         int random = UnityEngine.Random.Range(0, posList.Count - 1);
-        startPos = posList[UnityEngine.Random.Range(0, posList.Count)].transform.position;
-        transform.position = new Vector3(UnityEngine.Random.Range(startPos.x - 11, startPos.x + 11), 1f, UnityEngine.Random.Range(startPos.z - 11, startPos.z + 11));
+        transform.position = posList[random].transform.position;
         transform.rotation = Quaternion.Euler(0f, UnityEngine.Random.Range(0f, 360f), 0f);
 
         targetPos = posList[UnityEngine.Random.Range(0, posList.Count - 1)].transform.position;
