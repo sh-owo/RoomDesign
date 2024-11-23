@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [CreateAssetMenu]
 public class ObjectDatabaseSO : ScriptableObject
@@ -22,7 +23,7 @@ public class ObjectData
     public int ID { get; private set; }
     
     [field:SerializeField]
-    public float yOffset { get; private set; }
+    public Image Icon { get; private set; }
     
     [field:SerializeField]
     public int Price { get; private set; }
