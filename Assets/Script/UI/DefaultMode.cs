@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UI_Change : MonoBehaviour
+public class DefaultMode : MonoBehaviour
 {   
     public List<Sprite> spriteList = new List<Sprite>();
     public Image image;
