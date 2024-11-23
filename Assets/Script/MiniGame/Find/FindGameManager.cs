@@ -6,7 +6,7 @@ public class FindGameManager : MonoBehaviour
 {
     public static FindGameManager Instance { get; private set; }
     
-    public List<Vector3> spawnPos = new List<Vector3>();
+    public List<GameObject> spawnPos = new List<GameObject>();
 
     public float speed = 15f;
     public float rotationSpeed = 220f;

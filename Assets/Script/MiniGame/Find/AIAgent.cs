@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using Unity.MLAgents;
 using Unity.MLAgents.Sensors;
@@ -8,10 +9,7 @@ public class AIAgent : Agent
     private Rigidbody rb;
     private Vector3 startPos;
     private Vector3 targetPos;
-    public GameObject[] posList = new GameObject[9];
     [SerializeField] private GameObject target;
-    [Range(1, 100)] public float speed = 20f;
-    private float rotationSpeed = 220f;
 
     public void Start()
     {
@@ -24,12 +22,13 @@ public class AIAgent : Agent
     {
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
-        int random = UnityEngine.Random.Range(0, posList.Length);
-        startPos = posList[UnityEngine.Random.Range(0, posList.Length)].transform.position;
+        List<GameObject> posList = FindGameManager.Instance.spawnPos;
+        int random = UnityEngine.Random.Range(0, posList.Count - 1);
+        startPos = posList[UnityEngine.Random.Range(0, posList.Count)].transform.position;
         transform.position = new Vector3(UnityEngine.Random.Range(startPos.x - 11, startPos.x + 11), 1f, UnityEngine.Random.Range(startPos.z - 11, startPos.z + 11));
         transform.rotation = Quaternion.Euler(0f, UnityEngine.Random.Range(0f, 360f), 0f);
 
-        targetPos = posList[UnityEngine.Random.Range(0, posList.Length)].transform.position;
+        targetPos = posList[UnityEngine.Random.Range(0, posList.Count - 1)].transform.position;
         target.transform.position = new Vector3(UnityEngine.Random.Range(targetPos.x - 11, targetPos.x + 11), 1f, UnityEngine.Random.Range(targetPos.z - 11, targetPos.z + 11));
     }
 
@@ -45,11 +44,14 @@ public class AIAgent : Agent
 
         AddReward(-1/MaxStep);
     }
-    
+
     public void Movement(int inputs)
     {
         Vector3 move = Vector3.zero;
         Vector3 rotation = Vector3.zero;
+        float speed = FindGameManager.Instance.speed;
+        float rotationSpeed = FindGameManager.Instance.rotationSpeed;
+
         switch (inputs)
         {
             case 1: move = transform.forward * speed * Time.deltaTime; break;
@@ -57,12 +59,12 @@ public class AIAgent : Agent
             case 3: rotation = transform.up * rotationSpeed * Time.deltaTime; break;
             case 4: rotation = -transform.up * rotationSpeed * Time.deltaTime; break;
         }
-        
-        rb.AddForce(move * 2f, ForceMode.VelocityChange);
+
+        rb.AddForce(move * 1.5f, ForceMode.VelocityChange);
         transform.Rotate(rotation);
     }
 
-    private void OnCollisionEnter(Collision other) 
+    private void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.CompareTag("Wall"))
         {
@@ -79,7 +81,7 @@ public class AIAgent : Agent
     public override void Heuristic(in ActionBuffers actionsOut)
     {
         var discreteActions = actionsOut.DiscreteActions;
-        
+
         // Set the action based on key input
         if (Input.GetKey(KeyCode.W)) discreteActions[0] = 1;
         else if (Input.GetKey(KeyCode.S)) discreteActions[0] = 2;
