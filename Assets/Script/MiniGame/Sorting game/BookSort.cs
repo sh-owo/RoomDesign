@@ -5,11 +5,11 @@ using TMPro; // TextMeshPro를 사용하려면 추가
 public class BookSort : MonoBehaviour
 {
     public GameObject objectPrefab; 
-    public GameObject booksParent; 
-    public int objectCount;
+    public GameObject booksParent;
     
+    private int objectCount = 30;
     public static List<int> objectNumbers = new List<int>();
-    private int placedIndex = 0;
+    private int placed = 0;
     private const int rowSize = 10;
 
     void Start()
@@ -54,8 +54,10 @@ public class BookSort : MonoBehaviour
         newObject.name = "Book " + index;
         newObject.transform.SetParent(booksParent.transform);
         
-        newObject.transform.position = new Vector3((float)(placedIndex % rowSize - (rowSize / 2)) / 2.5f, - placedIndex / rowSize + (objectCount / rowSize), 0);
-        placedIndex++;
+        float x = (placed % rowSize - (rowSize / 2)) * 0.5f;
+        float y = -(placed / rowSize + (int)(placed/ rowSize) * 0.5f) + (objectCount / rowSize);
+        newObject.transform.position = new Vector3(x,y,0);
+        placed++;
 
         UpdateObjectNumber(newObject, index);
 
