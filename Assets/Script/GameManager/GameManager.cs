@@ -8,7 +8,7 @@ public struct InventoryItem
     public string Name;
     public string Tags;
     public int Count;
-    public Image Icon;
+    public Sprite Icon;
 }
 
 public class GameManager : MonoBehaviour

@@ -33,7 +33,7 @@ public class ObjectData
     public int Price { get; private set; }
     
     [field:SerializeField]
-    public Image Icon { get; private set; }
+    public Sprite Icon { get; private set; }
 
     [field: SerializeField] 
     public List<Tag> Tags { get; private set; }
