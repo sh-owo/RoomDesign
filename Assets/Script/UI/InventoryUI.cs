@@ -1,21 +1,55 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class InventoryUI : MonoBehaviour
 {
-    [SerializeField] private GameObject SlotUI;
-    [SerializeField] private Transform SlotRoot;
-    
-    // Start is called before the first frame update
+    [SerializeField] private GameObject inventoryPanel;
+    [SerializeField] private Transform slotHolder;
+    [SerializeField] private GameObject slotPrefab;
+
+    private List<GameObject> slots = new List<GameObject>();
+    private GameManager gameManager;
+
     void Start()
     {
+        gameManager = GameManager.Instance;
+        gameManager.onInventoryChanged += UpdateInventoryUI;
         
+        // 초기 UI 설정
+        UpdateInventoryUI();
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnDestroy()
     {
-        
+        if (gameManager != null)
+        {
+            gameManager.onInventoryChanged -= UpdateInventoryUI;
+        }
+    }
+
+    private void UpdateInventoryUI()
+    {
+        ClearSlots();
+
+        foreach (InventoryItem item in gameManager.Inventory)
+        {
+            GameObject newSlot = Instantiate(slotPrefab, slotHolder);
+            slots.Add(newSlot);
+
+            InventorySlot slotUI = newSlot.GetComponent<InventorySlot>();
+            if (slotUI != null)
+            {
+                slotUI.SetItem(item);
+            }
+        }
+    }
+
+    private void ClearSlots()
+    {
+        foreach (GameObject slot in slots)
+        {
+            Destroy(slot);
+        }
+        slots.Clear();
     }
 }
