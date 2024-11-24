@@ -15,14 +15,11 @@ MonoBehaviour:
   ObjectsData:
   - <Name>k__BackingField: TestCube
     <Prefab>k__BackingField: {fileID: 6727683441578239698, guid: 74600d9f2b8f046d1aeb96e99c6c953a, type: 3}
-    <ID>k__BackingField: 1
-    <yOffset>k__BackingField: 0
     <Price>k__BackingField: 0
-    <Tags>k__BackingField: []
+    <Icon>k__BackingField: {fileID: 21300000, guid: a04173f26cafb4708a667c2797d349e9, type: 3}
+    <Tags>k__BackingField: 0000000000000000
   - <Name>k__BackingField: TestSphere
     <Prefab>k__BackingField: {fileID: 1627388342449283037, guid: 3fd45ac3aaff94f56b8da3a6a3a43345, type: 3}
-    <ID>k__BackingField: 2
-    <yOffset>k__BackingField: 0
     <Price>k__BackingField: 0
-    <Tags>k__BackingField:
-    - 
+    <Icon>k__BackingField: {fileID: 0}
+    <Tags>k__BackingField: 00000000
