@@ -1,22 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
+public struct InventoryItem
+{
+    public string Name;
+    public string Tags;
+    public int Count;
+    public Image Icon;
+}
 
 public class GameManager : MonoBehaviour
 {
-    //TODO: 1번이 기본이되는 건설설정(F,G) 2번이 건설한거 움직이는기능(이동,회전)
-    //TODO: stuffClass: stuff, 정상적으로 배치되기 위한 pos, 
     public static GameManager Instance { get; private set; }
-    public int moveMode = 1; //1: 기본, 2: 물건이동, 3: 물건회전
 
-    public enum StuffMode
+    public enum Mode
     {
-        Default,
-        Move,
-        Rotate
+        Normal,      // 일반 모드
+        Inventory,   // 아이템창 모드
+        Shop,        // 상점 모드
+        Game         // 게임 모드
     }
+    
+    public List<InventoryItem> Invertory = new List<InventoryItem>();
 
-    public StuffMode CurrentMode = StuffMode.Default;
+    public Mode CurrentMode = Mode.Normal;
     
     private void Awake()
     {

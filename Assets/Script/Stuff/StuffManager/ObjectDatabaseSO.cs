@@ -19,15 +19,9 @@ public class ObjectData
     public GameObject Prefab { get; private set; }
     
     [field:SerializeField]
-    public int ID { get; private set; }
-    
-    [field:SerializeField]
-    public float yOffset { get; private set; }
-    
-    [field:SerializeField]
     public int Price { get; private set; }
-    
-    [field:SerializeField]
+
+    [field: SerializeField] 
     public List<String> Tags { get; private set; }
-    
+
 }
