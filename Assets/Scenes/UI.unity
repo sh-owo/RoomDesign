@@ -1041,6 +1041,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd281b4e14cad415b8b439db7450c0f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  objectDatabase: {fileID: 11400000, guid: a48ca407d854c41f795190cc447b58a1, type: 2}
   CurrentMode: 0
 --- !u!4 &1812512255
 Transform:
