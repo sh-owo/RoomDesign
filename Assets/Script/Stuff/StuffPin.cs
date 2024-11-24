@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class StuffPin : MonoBehaviour
 {
-    // Start is called before the first frame update
+    private List<int> currentList;
+    
     void Start()
     {
-        
+        currentList = new List<int>(BookSort.objectNumbers);
     }
 
     // Update is called once per frame
