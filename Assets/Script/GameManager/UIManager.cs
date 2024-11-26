@@ -44,8 +44,6 @@ public class UIManager : MonoBehaviour
         if (shopUI != null) shopUI.SetActive(mode == UIMode.Shop);
         if (gameUI != null) gameUI.SetActive(mode == UIMode.Game);
 
-        Debug.Log("현재 모드: " + mode);
-
         if (gameManager != null)
         {
             gameManager.SetMode((GameManager.Mode)mode);

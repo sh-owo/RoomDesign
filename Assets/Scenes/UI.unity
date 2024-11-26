@@ -405,6 +405,7 @@ GameObject:
   - component: {fileID: 381374427}
   - component: {fileID: 381374429}
   - component: {fileID: 381374428}
+  - component: {fileID: 381374430}
   m_Layer: 5
   m_Name: ShopUI
   m_TagString: Untagged
@@ -471,6 +472,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 381374426}
   m_CullTransparentMesh: 1
+--- !u!114 &381374430
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 381374426}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2debd510f633743d08c83cf93aebec9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shopPanel: {fileID: 381374426}
+  slotHolder: {fileID: 1488349930}
+  slotPrefab: {fileID: 7527990893385280028, guid: f788b624e132e4af6b8b234dcbd93e1f, type: 3}
+  objectDatabase: {fileID: 11400000, guid: a48ca407d854c41f795190cc447b58a1, type: 2}
 --- !u!1 &433904953
 GameObject:
   m_ObjectHideFlags: 0
@@ -1479,7 +1496,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 953498015009031074, guid: 359ecd2fcb7a64b7f953dab4326b71a1, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 953498015009031074, guid: 359ecd2fcb7a64b7f953dab4326b71a1, type: 3}
       propertyPath: m_AnchorMin.x
@@ -1487,15 +1504,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 953498015009031074, guid: 359ecd2fcb7a64b7f953dab4326b71a1, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 953498015009031074, guid: 359ecd2fcb7a64b7f953dab4326b71a1, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 130
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 953498015009031074, guid: 359ecd2fcb7a64b7f953dab4326b71a1, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 130
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 953498015009031074, guid: 359ecd2fcb7a64b7f953dab4326b71a1, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1527,11 +1544,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 953498015009031074, guid: 359ecd2fcb7a64b7f953dab4326b71a1, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 270
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 953498015009031074, guid: 359ecd2fcb7a64b7f953dab4326b71a1, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -70
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 953498015009031074, guid: 359ecd2fcb7a64b7f953dab4326b71a1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

@@ -42,7 +42,7 @@ public class ShopSlot : MonoBehaviour, IPointerClickHandler
         // 아이템 가격 표시
         if (priceText != null)
         {
-            priceText.text = $"{item.Price}G";
+            priceText.text = $"{item.Price}";
         }
 
         // 아이템 이름 표시
