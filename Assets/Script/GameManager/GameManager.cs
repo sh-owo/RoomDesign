@@ -21,10 +21,6 @@ public struct InventoryItem
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance { get; private set; }
-    
-    [SerializeField] private ObjectDatabaseSO objectDatabase;
-
     public enum Mode
     {
         Normal,      // 일반 모드
@@ -32,9 +28,18 @@ public class GameManager : MonoBehaviour
         Shop,        // 상점 모드
         Game         // 게임 모드
     }
+    public static GameManager Instance { get; private set; }
+    public GameObject SelectedPrefab { get; private set; }
+
+    public void SetSelectedPrefab(GameObject prefab)
+    {
+        SelectedPrefab = prefab;
+    }
     
+    [SerializeField] private ObjectDatabaseSO objectDatabase;
     public List<InventoryItem> Inventory = new List<InventoryItem>();
     public Mode CurrentMode = Mode.Normal;
+    public int Money = 1000;
 
     // 인벤토리 변경 이벤트 추가
     public event System.Action onInventoryChanged;
