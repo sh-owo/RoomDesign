@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
         Game         // 게임 모드
     }
     public static GameManager Instance { get; private set; }
-    public GameObject SelectedPrefab { get; private set; }
+    public GameObject SelectedPrefab { get; set; }
 
     public void SetSelectedPrefab(GameObject prefab)
     {

@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ShopUI : MonoBehaviour
 {
+    [SerializeField] private TMPro.TextMeshProUGUI moneyText;
     [SerializeField] private GameObject shopPanel;
     [SerializeField] private Transform slotHolder;
     [SerializeField] private GameObject slotPrefab;
@@ -15,6 +17,11 @@ public class ShopUI : MonoBehaviour
     private void Start()
     {
         InitializeShop();
+    }
+    
+    private void Update()
+    {
+        moneyText.text = $"Money:{GameManager.Instance.Money.ToString()}";
     }
 
     private void InitializeShop()

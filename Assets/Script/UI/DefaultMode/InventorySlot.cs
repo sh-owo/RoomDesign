@@ -49,8 +49,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
             // GameManager에 선택된 아이템 프리팹을 저장하기 위한 속성을 추가합니다.
             if (itemPrefab != null)
             {
-                // GameManager에 SelectedPrefab 속성을 추가해야 합니다.
-                // GameManager.Instance.SelectedPrefab = itemPrefab;
+                GameManager.Instance.SelectedPrefab = itemPrefab;
             }
         }
     }
