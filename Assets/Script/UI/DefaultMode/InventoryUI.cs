@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -17,6 +18,11 @@ public class InventoryUI : MonoBehaviour
         
         // 초기 UI 설정
         UpdateInventoryUI();
+    }
+
+    private void Update()
+    {
+       UpdateInventoryUI(); 
     }
 
     void OnDestroy()
