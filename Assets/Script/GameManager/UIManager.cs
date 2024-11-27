@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
@@ -13,11 +14,14 @@ public class UIManager : MonoBehaviour
     }
 
     private UIMode currentMode;
-
+    
+    [Header("UI")]
     public GameObject normalUI;
     public GameObject inventoryUI;
     public GameObject shopUI;
     public GameObject gameUI;
+
+    [Header("MoneyTMP")] public List<TMPro.TextMeshProUGUI> moneyTexts; 
 
     private GameManager gameManager;
 
@@ -33,6 +37,7 @@ public class UIManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha2)) SetMode(UIMode.Inventory);
         if (Input.GetKeyDown(KeyCode.Alpha3)) SetMode(UIMode.Shop);
         if (Input.GetKeyDown(KeyCode.Alpha4)) SetMode(UIMode.Game);
+        foreach(var txt in moneyTexts) { txt.text =$"Money:{gameManager.Money.ToString()}"; }
     }
 
     public void SetMode(UIMode mode)

@@ -8,6 +8,8 @@ public class DefaultMode : MonoBehaviour
     public List<Sprite> spriteList = new List<Sprite>();
     public Image image;
     
+    public int Getindex{private set; get;}
+    
     private int index = 0;
     
     void Start()
