@@ -1,17 +1,34 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
+public enum UIMode
+{
+    Normal,
+    Inventory,
+    Shop,
+    Game
+}
 public class UIManager : MonoBehaviour
 {
-    public enum UIMode
+    public static UIManager Instance { get; private set; }
+    private GameManager gameManager;
+
+    private void Awake()
     {
-        Normal,
-        Inventory,
-        Shop,
-        Game
+        // 싱글톤 인스턴스 설정
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject); // 이미 인스턴스가 있으면 새로 생성된 객체를 파괴
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject); // 씬 전환 시 파괴되지 않음
     }
+
 
     private UIMode currentMode;
     
@@ -23,7 +40,6 @@ public class UIManager : MonoBehaviour
 
     [Header("MoneyTMP")] public List<TMPro.TextMeshProUGUI> moneyTexts; 
 
-    private GameManager gameManager;
 
     void Start()
     {
@@ -40,6 +56,7 @@ public class UIManager : MonoBehaviour
         foreach(var txt in moneyTexts) { txt.text =$"Money:{gameManager.Money.ToString()}"; }
     }
 
+
     public void SetMode(UIMode mode)
     {
         currentMode = mode;
@@ -54,7 +71,6 @@ public class UIManager : MonoBehaviour
             gameManager.SetMode((GameManager.Mode)mode);
         }
     }
-
     public UIMode GetCurrentMode()
     {
         return currentMode;

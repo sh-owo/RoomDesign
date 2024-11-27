@@ -19,6 +19,7 @@ public struct InventoryItem
     }
 }
 
+
 public class GameManager : MonoBehaviour
 {
     public enum Mode
@@ -28,7 +29,20 @@ public class GameManager : MonoBehaviour
         Shop,        // 상점 모드
         Game         // 게임 모드
     }
+    
     public static GameManager Instance { get; private set; }
+    private void Awake()
+    {
+        // 싱글톤 인스턴스 설정
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject); // 이미 인스턴스가 있으면 새로 생성된 객체를 파괴
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject); // 씬 전환 시 파괴되지 않음
+    }
     public GameObject SelectedPrefab { get; set; }
 
     public void SetSelectedPrefab(GameObject prefab)
@@ -44,19 +58,6 @@ public class GameManager : MonoBehaviour
     // 인벤토리 변경 이벤트 추가
     public event System.Action onInventoryChanged;
     
-    private void Awake()
-    {
-        Screen.SetResolution(1920, 1080, true);
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
 
     // 아이템 추가 메서드
     public void AddItem(string name, string tags, int count, Sprite icon)
@@ -110,13 +111,9 @@ public class GameManager : MonoBehaviour
         int index = Inventory.FindIndex(item => item.Name == name);
         return index != -1 ? Inventory[index].Count : 0;
     }
-
-    // 모드 변경 메서드
+    
     public void SetMode(Mode newMode)
     {
         CurrentMode = newMode;
-        
-        // 인벤토리 모드일 때는 커서 표시
-        Cursor.visible = (newMode == Mode.Inventory || newMode == Mode.Shop);
     }
 }

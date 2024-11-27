@@ -41,16 +41,27 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
     // 아이템 슬롯 클릭 처리
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (hasItem && GameManager.Instance.CurrentMode == GameManager.Mode.Inventory)
+        Debug.Log("Slot clicked!"); // 클릭이 감지되는지 확인하기 위한 디버그 로그
+        
+        if (hasItem && GameManager.Instance != null && 
+            GameManager.Instance.CurrentMode == GameManager.Mode.Inventory)
         {
-            // 현재 선택된 아이템 정보를 GameManager에 저장하는 변수를 추가해야 합니다.
             Debug.Log($"Selected item: {currentItem.Name} with tags: {currentItem.Tags}");
             
-            // GameManager에 선택된 아이템 프리팹을 저장하기 위한 속성을 추가합니다.
             if (itemPrefab != null)
             {
                 GameManager.Instance.SelectedPrefab = itemPrefab;
+                Debug.Log("Prefab selected!"); // 프리팹이 선택되었는지 확인
             }
+            else
+            {
+                Debug.LogWarning("No prefab assigned to this slot!");
+            }
+        }
+        else
+        {
+            Debug.Log($"Click detected but conditions not met: HasItem={hasItem}, " +
+                      $"GameManager null={GameManager.Instance == null}"); // 조건 확인을 위한 디버그 로그
         }
     }
 
