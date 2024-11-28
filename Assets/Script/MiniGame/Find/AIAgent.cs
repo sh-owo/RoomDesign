@@ -10,6 +10,7 @@ public class AIAgent : Agent
     private Vector3 startPos;
     private Vector3 targetPos;
     [SerializeField] private GameObject target;
+    [SerializeField] private FindGameManager FindGameManager;
 
     public void Start()
     {
@@ -22,13 +23,13 @@ public class AIAgent : Agent
     {
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
-        List<GameObject> posList = FindGameManager.Instance.spawnPos;
+        List<GameObject> posList = FindGameManager.spawnPos;
         int random = UnityEngine.Random.Range(0, posList.Count - 1);
         transform.position = posList[random].transform.position;
         transform.rotation = Quaternion.Euler(0f, UnityEngine.Random.Range(0f, 360f), 0f);
 
         targetPos = posList[UnityEngine.Random.Range(0, posList.Count - 1)].transform.position;
-        target.transform.position = new Vector3(UnityEngine.Random.Range(targetPos.x - 11, targetPos.x + 11), 1f, UnityEngine.Random.Range(targetPos.z - 11, targetPos.z + 11));
+        target.transform.position = new Vector3(UnityEngine.Random.Range(targetPos.x - 1, targetPos.x + 1), 1f, UnityEngine.Random.Range(targetPos.z - 1, targetPos.z + 1));
     }
 
     public override void CollectObservations(VectorSensor sensor)
@@ -48,8 +49,8 @@ public class AIAgent : Agent
     {
         Vector3 move = Vector3.zero;
         Vector3 rotation = Vector3.zero;
-        float speed = FindGameManager.Instance.speed;
-        float rotationSpeed = FindGameManager.Instance.rotationSpeed;
+        float speed = FindGameManager.speed;
+        float rotationSpeed = FindGameManager.rotationSpeed;
 
         switch (inputs)
         {
