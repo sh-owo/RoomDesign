@@ -7,7 +7,7 @@ using UnityEngine;
 public enum UIMode
 {
     Normal,
-    Inventory,
+    SceneMove,
     Shop,
     Game
 }
@@ -34,7 +34,7 @@ public class UIManager : MonoBehaviour
     
     [Header("UI")]
     public GameObject normalUI;
-    public GameObject inventoryUI;
+    public GameObject sceneMoveUI;
     public GameObject shopUI;
     public GameObject gameUI;
 
@@ -50,7 +50,7 @@ public class UIManager : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1)) SetMode(UIMode.Normal);
-        if (Input.GetKeyDown(KeyCode.Alpha2)) SetMode(UIMode.Inventory);
+        if (Input.GetKeyDown(KeyCode.Alpha2)) SetMode(UIMode.SceneMove);
         if (Input.GetKeyDown(KeyCode.Alpha3)) SetMode(UIMode.Shop);
         if (Input.GetKeyDown(KeyCode.Alpha4)) SetMode(UIMode.Game);
         foreach(var txt in moneyTexts) { txt.text =$"Money:{gameManager.Money.ToString()}"; }
@@ -62,7 +62,7 @@ public class UIManager : MonoBehaviour
         currentMode = mode;
 
         if (normalUI != null) normalUI.SetActive(mode == UIMode.Normal);
-        if (inventoryUI != null) inventoryUI.SetActive(mode == UIMode.Inventory);
+        if (sceneMoveUI != null) sceneMoveUI.SetActive(mode == UIMode.SceneMove);
         if (shopUI != null) shopUI.SetActive(mode == UIMode.Shop);
         if (gameUI != null) gameUI.SetActive(mode == UIMode.Game);
 
