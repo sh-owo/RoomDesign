@@ -19,11 +19,7 @@ public class InventoryUI : MonoBehaviour
         // 초기 UI 설정
         UpdateInventoryUI();
     }
-
-    private void Update()
-    {
-       UpdateInventoryUI(); 
-    }
+    
 
     void OnDestroy()
     {
@@ -33,7 +29,7 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
-    private void UpdateInventoryUI()
+    public void UpdateInventoryUI()
     {
         ClearSlots();
 

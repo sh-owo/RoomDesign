@@ -9,13 +9,15 @@ public struct ShopItem
     public string Tags;
     public int Price;
     public Sprite Icon;
+    public GameObject Prefab;
 
-    public ShopItem(string name, string tags, int price, Sprite icon)
+    public ShopItem(string name, string tags, int price, Sprite icon, GameObject prefab)
     {
         Name = name;
         Tags = tags;
         Price = price;
         Icon = icon;
+        Prefab = prefab;
     }
 }
 public class ShopSlot : MonoBehaviour, IPointerClickHandler
@@ -74,7 +76,8 @@ public class ShopSlot : MonoBehaviour, IPointerClickHandler
                 currentItem.Name,
                 currentItem.Tags,
                 1,  // 한 번에 1개씩 구매
-                currentItem.Icon
+                currentItem.Icon,
+                currentItem.Prefab
             );
 
             Debug.Log($"Purchased: {currentItem.Name} for {currentItem.Price}G");

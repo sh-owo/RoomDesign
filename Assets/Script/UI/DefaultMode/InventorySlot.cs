@@ -8,86 +8,72 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
     [SerializeField] private UnityEngine.UI.Image iconImage;
     [SerializeField] private TMPro.TextMeshProUGUI countText;
     [SerializeField] private TMPro.TextMeshProUGUI nameText;
-    [SerializeField] private GameObject itemPrefab; // 해당 슬롯의 아이템 프리팹
+    [SerializeField] private GameObject itemPrefab;
 
     private InventoryItem currentItem;
+    private InventoryUI inventoryUI;
     private bool hasItem = false;
 
-    public void SetItem(InventoryItem item)
+    void Awake()
     {
-        currentItem = item;
-        hasItem = true;
-
-        // 아이템 아이콘 설정
-        if (iconImage != null)
+        inventoryUI = GetComponentInParent<InventoryUI>();
+        if (inventoryUI == null)
         {
-            iconImage.sprite = item.Icon;
-            iconImage.enabled = true;
-        }
-
-        // 아이템 개수 표시
-        if (countText != null)
-        {
-            countText.text = item.Count > 1 ? item.Count.ToString() : "";
-        }
-
-        // 아이템 이름 표시
-        if (nameText != null)
-        {
-            nameText.text = item.Name;
+            Debug.LogWarning("InventoryUI component not found in parents!");
         }
     }
 
-    // 아이템 슬롯 클릭 처리
     public void OnPointerClick(PointerEventData eventData)
     {
-        Debug.Log("Slot clicked!"); // 클릭이 감지되는지 확인하기 위한 디버그 로그
-        
-        if (hasItem && GameManager.Instance != null && 
-            GameManager.Instance.CurrentMode == GameManager.Mode.Inventory)
+        Debug.Log($"OnPointerClick - Current Mode: {GameManager.Instance.CurrentMode}, HasItem: {hasItem}");
+
+        if (hasItem && GameManager.Instance != null)
         {
             Debug.Log($"Selected item: {currentItem.Name} with tags: {currentItem.Tags}");
-            
+
             if (itemPrefab != null)
             {
-                GameManager.Instance.SelectedPrefab = itemPrefab;
-                Debug.Log("Prefab selected!"); // 프리팹이 선택되었는지 확인
+                // 프리팹 설정
+                GameManager.Instance.selectedPrefab = itemPrefab;
+
+                // 게임 모드로 전환
+                GameManager.Instance.SetMode(GameManager.Mode.Game);
+                UIManager.Instance.SetMode(UIMode.Game);
+
+                Debug.Log($"Prefab selected and mode changed to Game");
             }
             else
             {
                 Debug.LogWarning("No prefab assigned to this slot!");
             }
         }
-        else
+
+        if (inventoryUI != null)
         {
-            Debug.Log($"Click detected but conditions not met: HasItem={hasItem}, " +
-                      $"GameManager null={GameManager.Instance == null}"); // 조건 확인을 위한 디버그 로그
+            inventoryUI.UpdateInventoryUI();
         }
     }
 
-    // 슬롯 초기화
-    public void ClearSlot()
+    public void SetItem(InventoryItem item)
     {
+        currentItem = item;
+        hasItem = true;
+        itemPrefab = item.Prefab;  // 아이템의 프리팹 설정
+
         if (iconImage != null)
         {
-            iconImage.enabled = false;
+            iconImage.sprite = item.Icon;
+            iconImage.enabled = true;
         }
+
         if (countText != null)
         {
-            countText.text = "";
+            countText.text = item.Count > 1 ? item.Count.ToString() : "";
         }
+
         if (nameText != null)
         {
-            nameText.text = "";
+            nameText.text = item.Name;
         }
-        
-        hasItem = false;
-        currentItem = new InventoryItem();
-    }
-
-    // 현재 아이템의 프리팹 설정
-    public void SetItemPrefab(GameObject prefab)
-    {
-        itemPrefab = prefab;
     }
 }

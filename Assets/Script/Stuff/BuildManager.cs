@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class BuildManager : MonoBehaviour
 {
@@ -10,13 +11,16 @@ public class BuildManager : MonoBehaviour
     [SerializeField] private float maxPlacementDistance = 100f;
     [SerializeField] private LayerMask ignoreLayers;
     [SerializeField] private float rotationSpeed = 2.0f;
+    [SerializeField] private KeyCode placeKey = KeyCode.F;
+    [SerializeField] private KeyCode removeKey = KeyCode.V;
+    [SerializeField] private KeyCode rotateKey = KeyCode.R;
 
     private GameObject previewObject;
     private bool canPlace = false;
     private Vector3 currentPosition;
     private Renderer previewRenderer;
     private float lastMouseX;
-    private bool firstUpdateAfterModeChange = false; // 모드 변경 직후 첫 업데이트 체크
+    private bool firstUpdateAfterModeChange = false;
     
     private enum BuildMode
     {
@@ -28,24 +32,51 @@ public class BuildManager : MonoBehaviour
 
     void Start()
     {
-        previewObject = Instantiate(objectToPlace);
+        if (GameManager.Instance != null && GameManager.Instance.selectedPrefab != null)
+        {
+            previewObject = Instantiate(GameManager.Instance.selectedPrefab);
+        }
+        else if (objectToPlace != null)
+        {
+            previewObject = Instantiate(objectToPlace);
+        }
+        else
+        {
+            Debug.LogError("No object to place assigned!");
+            enabled = false;
+            return;
+        }
+
         previewRenderer = previewObject.GetComponent<Renderer>();
+        if (previewRenderer == null)
+        {
+            Debug.LogWarning("No renderer found on preview object!");
+        }
+        
         DisablePhysics(previewObject);
+        
+        // 초기 머티리얼 설정
+        UpdatePreviewMaterials(validPlacementMaterial);
     }
 
     void DisablePhysics(GameObject obj)
     {
+        if (obj == null) return;
+
+        // 메인 오브젝트의 물리 컴포넌트 비활성화
         Collider[] colliders = obj.GetComponents<Collider>();
         foreach (Collider collider in colliders)
         {
             collider.isTrigger = true;
         }
         
+        // 자식 오브젝트들의 물리 컴포넌트 비활성화
         foreach (Collider collider in obj.GetComponentsInChildren<Collider>())
         {
             collider.isTrigger = true;
         }
 
+        // Rigidbody 제거
         Rigidbody[] rigidBodies = obj.GetComponentsInChildren<Rigidbody>(true);
         foreach (Rigidbody rb in rigidBodies)
         {
@@ -61,20 +92,43 @@ public class BuildManager : MonoBehaviour
 
     void Update()
     {
+        if (GameManager.Instance == null) return;
+
+        // 선택된 프리팹 변경 감지
+        if (GameManager.Instance.selectedPrefab != null && 
+            (previewObject == null || previewObject.name != GameManager.Instance.selectedPrefab.name + "(Clone)"))
+        {
+            if (previewObject != null)
+            {
+                Destroy(previewObject);
+            }
+            previewObject = Instantiate(GameManager.Instance.selectedPrefab);
+            previewRenderer = previewObject.GetComponent<Renderer>();
+            DisablePhysics(previewObject);
+            UpdatePreviewMaterials(validPlacementMaterial);
+        }
+
         // ESC로 회전 모드 빠져나오기
         if (Input.GetKeyDown(KeyCode.Escape) && currentMode == BuildMode.Rotation)
         {
             currentMode = BuildMode.Placement;
-            firstUpdateAfterModeChange = true; // 모드 변경 직후 플래그 설정
-            return; // 이번 프레임에서는 더 이상 처리하지 않음
+            firstUpdateAfterModeChange = true;
+            return;
         }
         
-        // R키로 회전 모드 전환
-        if (Input.GetKeyDown(KeyCode.R))
+        // 회전 모드 전환
+        if (Input.GetKeyDown(rotateKey))
         {
             currentMode = BuildMode.Rotation;
             lastMouseX = Input.mousePosition.x;
-            return; // 이번 프레임에서는 더 이상 처리하지 않음
+            return;
+        }
+
+        // 오브젝트 제거
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            Debug.Log("Remove object");
+            RemoveObject();
         }
 
         // 배치 모드이고 첫 업데이트가 아닐 때만 위치 업데이트
@@ -98,13 +152,15 @@ public class BuildManager : MonoBehaviour
                 break;
         }
 
-        // 충돌 체크 및 머티리얼 업데이트는 항상 수행
+        // 충돌 체크 및 머티리얼 업데이트
         canPlace = !CheckCollision();
         UpdatePreviewMaterials(canPlace ? validPlacementMaterial : invalidPlacementMaterial);
     }
 
     void UpdatePosition()
     {
+        if (previewObject == null) return;
+
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
@@ -122,6 +178,8 @@ public class BuildManager : MonoBehaviour
 
     void HandleRotation()
     {
+        if (previewObject == null) return;
+
         float mouseDelta = Input.mousePosition.x - lastMouseX;
         float rotationAmount = mouseDelta * rotationSpeed;
         
@@ -130,42 +188,109 @@ public class BuildManager : MonoBehaviour
         lastMouseX = Input.mousePosition.x;
     }
 
-    bool CheckCollision()
+private List<GizmoData> gizmoDataList = new List<GizmoData>();
+
+private struct GizmoData
+{
+    public Vector3 center;
+    public Vector3 size;
+    public Quaternion rotation;
+    public bool hasCollision;
+
+    public GizmoData(Vector3 center, Vector3 size, Quaternion rotation, bool hasCollision)
     {
-        Collider[] previewColliders = previewObject.GetComponentsInChildren<Collider>();
-        foreach (Collider previewCollider in previewColliders)
+        this.center = center;
+        this.size = size;
+        this.rotation = rotation;
+        this.hasCollision = hasCollision;
+    }
+}
+bool CheckCollision()
+{
+    if (previewObject == null) return true;
+
+    gizmoDataList.Clear();
+    bool hasAnyCollision = false;
+
+    Collider[] previewColliders = previewObject.GetComponentsInChildren<Collider>();
+    foreach (Collider previewCollider in previewColliders)
+    {
+        // BoxCollider인 경우
+        BoxCollider boxCollider = previewCollider as BoxCollider;
+        if (boxCollider != null)
         {
-            Vector3 center = previewCollider.bounds.center;
-            Vector3 halfExtents = previewCollider.bounds.extents * 0.8f;
+            // 로컬 크기와 중심점을 월드 좌표로 변환
+            Vector3 worldCenter = previewCollider.transform.TransformPoint(boxCollider.center);
+            Vector3 worldSize = Vector3.Scale(boxCollider.size, previewCollider.transform.lossyScale) * 0.8f;
             
             Collider[] hitColliders = Physics.OverlapBox(
-                center,
-                halfExtents,
-                previewObject.transform.rotation,
+                worldCenter,
+                worldSize * 0.5f,  // OverlapBox는 half-extents를 사용하므로 0.5를 곱함
+                previewCollider.transform.rotation,
                 ~ignoreLayers
             );
 
+            bool currentCollision = false;
             foreach (Collider hitCollider in hitColliders)
             {
                 if (hitCollider.gameObject != previewObject && 
                     !hitCollider.transform.IsChildOf(previewObject.transform) &&
                     !previewObject.transform.IsChildOf(hitCollider.transform))
                 {
-                    return true;
+                    currentCollision = true;
+                    hasAnyCollision = true;
+                    break;
                 }
             }
+
+            gizmoDataList.Add(new GizmoData(
+                worldCenter,
+                worldSize,
+                previewCollider.transform.rotation,
+                currentCollision
+            ));
         }
-        return false;
     }
+    return hasAnyCollision;
+}
+
+private void OnDrawGizmos()
+{
+    if (!Application.isPlaying) return;
+    
+    foreach (var gizmoData in gizmoDataList)
+    {
+        // 충돌이 있으면 빨간색, 없으면 초록색으로 표시
+        Gizmos.color = gizmoData.hasCollision ? 
+            new Color(1, 0, 0, 0.5f) : // 반투명 빨간색
+            new Color(0, 1, 0, 0.5f);  // 반투명 초록색
+
+        Matrix4x4 originalMatrix = Gizmos.matrix;
+        Gizmos.matrix = Matrix4x4.TRS(gizmoData.center, gizmoData.rotation, Vector3.one);
+        
+        // 와이어프레임 박스
+        Gizmos.DrawWireCube(Vector3.zero, gizmoData.size);
+        
+        // 반투명한 실선 박스
+        Gizmos.color = new Color(Gizmos.color.r, Gizmos.color.g, Gizmos.color.b, 0.2f);
+        Gizmos.DrawCube(Vector3.zero, gizmoData.size);
+        
+        Gizmos.matrix = originalMatrix;
+    }
+}
     
     private void UpdatePreviewMaterials(Material material)
     {
+        if (material == null || previewObject == null) return;
+
+        // 메인 렌더러 업데이트
         Renderer renderer = previewObject.GetComponent<Renderer>();
         if (renderer != null)
         {
             renderer.material = material;
         }
 
+        // 자식 오브젝트의 렌더러들 업데이트
         Renderer[] childRenderers = previewObject.GetComponentsInChildren<Renderer>();
         foreach (Renderer childRenderer in childRenderers)
         {
@@ -175,12 +300,34 @@ public class BuildManager : MonoBehaviour
 
     void HandlePlacement()
     {
-        if (Input.GetKeyDown(KeyCode.F) && canPlace)
+        if (Input.GetKeyDown(placeKey) && canPlace)
         {
-            GameObject placedObject = Instantiate(objectToPlace, currentPosition, previewObject.transform.rotation);
-            placedObject.GetComponent<Collider>().enabled = true;
-            placedObject.layer = LayerMask.NameToLayer("Objects");
+            GameObject prefabToPlace = GameManager.Instance.selectedPrefab ?? objectToPlace;
+            GameObject placedObject = Instantiate(prefabToPlace, currentPosition, previewObject.transform.rotation);
             
+            // 물리 컴포넌트 설정
+            Collider mainCollider = placedObject.GetComponent<Collider>();
+            if (mainCollider != null)
+            {
+                mainCollider.isTrigger = false;
+                mainCollider.enabled = true;
+            }
+
+            // 자식 콜라이더들 설정
+            foreach (Collider childCollider in placedObject.GetComponentsInChildren<Collider>())
+            {
+                childCollider.isTrigger = false;
+                childCollider.enabled = true;
+            }
+            
+            // 레이어 설정
+            placedObject.layer = LayerMask.NameToLayer("Objects");
+            foreach (Transform child in placedObject.GetComponentsInChildren<Transform>())
+            {
+                child.gameObject.layer = LayerMask.NameToLayer("Objects");
+            }
+            
+            // Rigidbody 설정
             Rigidbody[] rigidbodies = placedObject.GetComponentsInChildren<Rigidbody>();
             foreach (Rigidbody rb in rigidbodies)
             {
@@ -197,7 +344,26 @@ public class BuildManager : MonoBehaviour
 
     void RemoveObject()
     {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
         
+        if (Physics.Raycast(ray, out hit, maxPlacementDistance))
+        {
+            GameObject hitObject = hit.collider.gameObject;
+            Debug.Log("hit");
+            if (hitObject.tag == "Stuff")
+            {
+                // 부모 오브젝트 찾기
+                Transform parent = hitObject.transform;
+                while (parent.parent != null && 
+                       parent.parent.gameObject.layer == LayerMask.NameToLayer("Objects"))
+                {
+                    parent = parent.parent;
+                }
+                
+                Destroy(parent.gameObject);
+            }
+        }
     }
 
     void OnDestroy()

@@ -40,7 +40,8 @@ public class ShopUI : MonoBehaviour
                 objectData.Name,
                 tagString,
                 objectData.Price,
-                objectData.Icon
+                objectData.Icon,
+                objectData.Prefab
             );
 
             // 슬롯에 아이템 설정
