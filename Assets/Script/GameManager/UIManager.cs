@@ -1,57 +1,76 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
+public enum UIMode
+{
+    Normal,
+    Inventory,
+    Shop,
+    Game
+}
 public class UIManager : MonoBehaviour
 {
-    // UI 상태를 나타내는 열거형
-    public enum UIMode
+    public static UIManager Instance { get; private set; }
+    private GameManager gameManager;
+
+    private void Awake()
     {
-        Normal,      // 일반 모드
-        Inventory,   // 아이템창 모드
-        Shop,        // 상점 모드
-        Game         // 게임 모드
+        // 싱글톤 인스턴스 설정
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject); // 이미 인스턴스가 있으면 새로 생성된 객체를 파괴
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject); // 씬 전환 시 파괴되지 않음
     }
 
-    // 현재 UI 상태
-    private UIMode currentMode;
 
-    // 각 모드의 UI를 참조하기 위한 GameObject 변수
+    private UIMode currentMode;
+    
+    [Header("UI")]
     public GameObject normalUI;
     public GameObject inventoryUI;
     public GameObject shopUI;
     public GameObject gameUI;
 
+    [Header("MoneyTMP")] public List<TMPro.TextMeshProUGUI> moneyTexts; 
+
+
     void Start()
     {
-        // 초기 모드를 Normal로 설정
+        gameManager = FindObjectOfType<GameManager>();
         SetMode(UIMode.Normal);
     }
 
     void Update()
     {
-        // 키 입력으로 모드 전환 테스트 (임시 입력 처리)
-        if (Input.GetKeyDown(KeyCode.Alpha1)) SetMode(UIMode.Normal);      // 일반 모드
-        if (Input.GetKeyDown(KeyCode.Alpha2)) SetMode(UIMode.Inventory);   // 아이템창 모드
-        if (Input.GetKeyDown(KeyCode.Alpha3)) SetMode(UIMode.Shop);        // 상점 모드
-        if (Input.GetKeyDown(KeyCode.Alpha4)) SetMode(UIMode.Game);        // 게임 모드
+        if (Input.GetKeyDown(KeyCode.Alpha1)) SetMode(UIMode.Normal);
+        if (Input.GetKeyDown(KeyCode.Alpha2)) SetMode(UIMode.Inventory);
+        if (Input.GetKeyDown(KeyCode.Alpha3)) SetMode(UIMode.Shop);
+        if (Input.GetKeyDown(KeyCode.Alpha4)) SetMode(UIMode.Game);
+        foreach(var txt in moneyTexts) { txt.text =$"Money:{gameManager.Money.ToString()}"; }
     }
 
-    // 모드를 설정하는 메서드
+
     public void SetMode(UIMode mode)
     {
         currentMode = mode;
 
-        // 모든 UI를 비활성화한 후, 해당 모드의 UI만 활성화
         if (normalUI != null) normalUI.SetActive(mode == UIMode.Normal);
         if (inventoryUI != null) inventoryUI.SetActive(mode == UIMode.Inventory);
         if (shopUI != null) shopUI.SetActive(mode == UIMode.Shop);
         if (gameUI != null) gameUI.SetActive(mode == UIMode.Game);
 
-        Debug.Log("현재 모드: " + mode);
+        if (gameManager != null)
+        {
+            gameManager.SetMode((GameManager.Mode)mode);
+        }
     }
-
-    // 현재 모드를 반환 (필요 시 외부에서 호출 가능)
     public UIMode GetCurrentMode()
     {
         return currentMode;

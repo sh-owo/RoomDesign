@@ -9,22 +9,20 @@ public struct InventoryItem
     public string Tags;
     public int Count;
     public Sprite Icon;
+    public GameObject Prefab;
 
-    public InventoryItem(string name, string tags, int count, Sprite icon)
+    public InventoryItem(string name, string tags, int count, Sprite icon, GameObject prefab)
     {
         Name = name;
         Tags = tags;
         Count = count;
         Icon = icon;
+        Prefab = prefab;
     }
 }
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance { get; private set; }
-    
-    [SerializeField] private ObjectDatabaseSO objectDatabase;
-
     public enum Mode
     {
         Normal,      // 일반 모드
@@ -33,86 +31,214 @@ public class GameManager : MonoBehaviour
         Game         // 게임 모드
     }
     
-    public List<InventoryItem> Inventory = new List<InventoryItem>();
-    public Mode CurrentMode = Mode.Normal;
+    // 싱글톤 인스턴스
+    public static GameManager Instance { get; private set; }
 
-    // 인벤토리 변경 이벤트 추가
-    public event System.Action onInventoryChanged;
+    // 현재 모드 관리
+    private Mode currentMode = Mode.Normal;
+    public Mode CurrentMode => currentMode;
+
+    // 선택된 프리팹 관리
+    public GameObject selectedPrefab;
+
+
+    // 인벤토리 및 게임 상태 관리
+    [SerializeField] private ObjectDatabaseSO objectDatabase;
+    private List<InventoryItem> inventory = new List<InventoryItem>();
+    public IReadOnlyList<InventoryItem> Inventory => inventory;
     
-    private void Awake()
+    private int money = 1000;
+    public int Money
     {
-        Cursor.visible = false;
-        Screen.SetResolution(1920, 1080, true);
-        if (Instance == null)
+        get => money;
+        set
         {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
+            if (money != value)
+            {
+                money = value;
+                onMoneyChanged?.Invoke(money);
+            }
         }
     }
 
-    // 아이템 추가 메서드
-    public void AddItem(string name, string tags, int count, Sprite icon)
+    // 이벤트
+    public event System.Action onInventoryChanged;
+    public event System.Action<int> onMoneyChanged;
+
+    private void Awake()
     {
-        // 이미 같은 이름의 아이템이 있는지 확인
-        int existingIndex = Inventory.FindIndex(item => item.Name == name);
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+        InitializeGame();
+    }
+
+    private void InitializeGame()
+    {
+        inventory.Clear();
+        Money = 1000;
+        currentMode = Mode.Normal;
+        selectedPrefab = null;
+    }
+
+    public void SetMode(Mode newMode)
+    {
+        if (currentMode != newMode)
+        {
+            currentMode = newMode;
+            Debug.Log($"Game mode changed to: {newMode}");
+            
+            // Game 모드가 아닐 때는 선택된 프리팹 초기화
+            if (newMode != Mode.Game)
+            {
+                selectedPrefab = null;
+            }
+        }
+    }
+
+    public void AddItem(string name, string tags, int count, Sprite icon, GameObject prefab)
+    {
+        if (count <= 0)
+        {
+            Debug.LogWarning($"Cannot add {count} items to inventory");
+            return;
+        }
+
+        int existingIndex = inventory.FindIndex(item => item.Name == name);
         
         if (existingIndex != -1)
         {
-            // 기존 아이템이 있다면 개수만 증가
-            InventoryItem existingItem = Inventory[existingIndex];
+            var existingItem = inventory[existingIndex];
             existingItem.Count += count;
-            Inventory[existingIndex] = existingItem;
+            inventory[existingIndex] = existingItem;
         }
         else
         {
-            // 새 아이템 추가
-            Inventory.Add(new InventoryItem(name, tags, count, icon));
+            inventory.Add(new InventoryItem(name, tags, count, icon, prefab));
         }
 
-        // 이벤트 발생
         onInventoryChanged?.Invoke();
+        Debug.Log($"Added {count} {name}(s) to inventory. Total: {GetItemCount(name)}");
     }
 
-    // 아이템 제거 메서드
-    public void RemoveItem(string name, int count = 1)
+    public bool RemoveItem(string name, int count = 1)
     {
-        int index = Inventory.FindIndex(item => item.Name == name);
+        if (count <= 0)
+        {
+            Debug.LogWarning($"Cannot remove {count} items from inventory");
+            return false;
+        }
+
+        int index = inventory.FindIndex(item => item.Name == name);
         
         if (index != -1)
         {
-            InventoryItem item = Inventory[index];
-            item.Count -= count;
-
-            if (item.Count <= 0)
+            var item = inventory[index];
+            if (item.Count >= count)
             {
-                Inventory.RemoveAt(index);
-            }
-            else
-            {
-                Inventory[index] = item;
-            }
+                item.Count -= count;
 
-            onInventoryChanged?.Invoke();
+                if (item.Count <= 0)
+                {
+                    inventory.RemoveAt(index);
+                }
+                else
+                {
+                    inventory[index] = item;
+                }
+
+                onInventoryChanged?.Invoke();
+                Debug.Log($"Removed {count} {name}(s) from inventory. Remaining: {GetItemCount(name)}");
+                return true;
+            }
         }
+        
+        Debug.LogWarning($"Failed to remove {count} {name}(s) from inventory: insufficient quantity");
+        return false;
     }
 
-    // 아이템 개수 확인 메서드
     public int GetItemCount(string name)
     {
-        int index = Inventory.FindIndex(item => item.Name == name);
-        return index != -1 ? Inventory[index].Count : 0;
+        int index = inventory.FindIndex(item => item.Name == name);
+        return index != -1 ? inventory[index].Count : 0;
     }
 
-    // 모드 변경 메서드
-    public void SetMode(Mode newMode)
+    public bool HasItem(string name, int count = 1)
     {
-        CurrentMode = newMode;
+        return GetItemCount(name) >= count;
+    }
+
+    public InventoryItem? GetItem(string name)
+    {
+        int index = inventory.FindIndex(item => item.Name == name);
+        return index != -1 ? inventory[index] : (InventoryItem?)null;
+    }
+
+    public bool AddMoney(int amount)
+    {
+        if (amount <= 0)
+        {
+            Debug.LogWarning($"Cannot add negative or zero amount of money: {amount}");
+            return false;
+        }
         
-        // 인벤토리 모드일 때는 커서 표시
-        Cursor.visible = (newMode == Mode.Inventory || newMode == Mode.Shop);
+        Money += amount;
+        Debug.Log($"Added {amount} money. New balance: {Money}");
+        return true;
+    }
+
+    public bool SpendMoney(int amount)
+    {
+        if (amount <= 0)
+        {
+            Debug.LogWarning($"Cannot spend negative or zero amount of money: {amount}");
+            return false;
+        }
+
+        if (Money < amount)
+        {
+            Debug.LogWarning($"Cannot spend {amount} money: insufficient funds (current balance: {Money})");
+            return false;
+        }
+
+        Money -= amount;
+        Debug.Log($"Spent {amount} money. Remaining balance: {Money}");
+        return true;
+    }
+
+    public bool HasEnoughMoney(int amount)
+    {
+        return Money >= amount;
+    }
+
+    public void SaveGameState()
+    {
+        // TODO: 게임 상태 저장 구현
+        Debug.Log("Game state saved");
+    }
+
+    public void LoadGameState()
+    {
+        // TODO: 게임 상태 로드 구현
+        Debug.Log("Game state loaded");
+    }
+
+    private void OnApplicationQuit()
+    {
+        SaveGameState();
+    }
+
+    // 디버그용 메서드
+    private void OnValidate()
+    {
+        if (objectDatabase == null)
+        {
+            Debug.LogWarning("ObjectDatabase is not assigned to GameManager!");
+        }
     }
 }

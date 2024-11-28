@@ -20,6 +20,8 @@ public enum Tag
     Etc
 }
 
+// Name, Prefab, Price, Icon, Tags
+
 [Serializable]
 public class ObjectData
 {
