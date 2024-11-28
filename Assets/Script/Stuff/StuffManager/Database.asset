@@ -13,13 +13,63 @@ MonoBehaviour:
   m_Name: Database
   m_EditorClassIdentifier: 
   ObjectsData:
-  - <Name>k__BackingField: TestCube
-    <Prefab>k__BackingField: {fileID: 6727683441578239698, guid: 74600d9f2b8f046d1aeb96e99c6c953a, type: 3}
-    <Price>k__BackingField: 0
-    <Icon>k__BackingField: {fileID: 21300000, guid: a04173f26cafb4708a667c2797d349e9, type: 3}
-    <Tags>k__BackingField: 0000000000000000
-  - <Name>k__BackingField: sphere
-    <Prefab>k__BackingField: {fileID: 1627388342449283037, guid: 3fd45ac3aaff94f56b8da3a6a3a43345, type: 3}
-    <Price>k__BackingField: 100
-    <Icon>k__BackingField: {fileID: 21300000, guid: 7391b05174553e3418b84b5d732be6d5, type: 3}
-    <Tags>k__BackingField: 00000000
+  - <Name>k__BackingField: present_box
+    <Prefab>k__BackingField: {fileID: 100000, guid: 1629a842b546381469b02425adcf027f, type: 3}
+    <Price>k__BackingField: 500
+    <Icon>k__BackingField: {fileID: 21300000, guid: 5c0d96ad54a2b024c86a88a308e0565c, type: 3}
+    <Tags>k__BackingField: 01000000
+  - <Name>k__BackingField: Xmas_tree
+    <Prefab>k__BackingField: {fileID: 100000, guid: d610123bf820bda4892639ab406a04af, type: 3}
+    <Price>k__BackingField: 1500
+    <Icon>k__BackingField: {fileID: 21300000, guid: da1beccb1d501d449bb7406a2c92751c, type: 3}
+    <Tags>k__BackingField: 01000000
+  - <Name>k__BackingField: candy_cane
+    <Prefab>k__BackingField: {fileID: 100000, guid: fcd353dc7296d4e48b3460a602ea0257, type: 3}
+    <Price>k__BackingField: 500
+    <Icon>k__BackingField: {fileID: 21300000, guid: 4fb916b9c7aa210498394bc650b196fc, type: 3}
+    <Tags>k__BackingField: 01000000
+  - <Name>k__BackingField: sub
+    <Prefab>k__BackingField: {fileID: 919132149155446097, guid: 626ed44566c394aff9783c8a70ec845a, type: 3}
+    <Price>k__BackingField: 700
+    <Icon>k__BackingField: {fileID: 21300000, guid: 19f78b7b9e25a3548a45b1ffb7c1f252, type: 3}
+    <Tags>k__BackingField: 02000000
+  - <Name>k__BackingField: apple
+    <Prefab>k__BackingField: {fileID: 919132149155446097, guid: 05bf9b9893edc4cc4933622ff4f99a51, type: 3}
+    <Price>k__BackingField: 300
+    <Icon>k__BackingField: {fileID: 21300000, guid: c58ba7a10e90d2d419ed29186347b2b9, type: 3}
+    <Tags>k__BackingField: 02000000
+  - <Name>k__BackingField: burger
+    <Prefab>k__BackingField: {fileID: 919132149155446097, guid: 6ff6a81ab99f14fa1b3a18bbfc011ba4, type: 3}
+    <Price>k__BackingField: 800
+    <Icon>k__BackingField: {fileID: 21300000, guid: f7e990759c8d78642902ea8ab2bbf685, type: 3}
+    <Tags>k__BackingField: 02000000
+  - <Name>k__BackingField: cookie
+    <Prefab>k__BackingField: {fileID: 919132149155446097, guid: f7846b4a2023549cbac5d10e6799cd6e, type: 3}
+    <Price>k__BackingField: 300
+    <Icon>k__BackingField: {fileID: 21300000, guid: 6baf5761129bc2a478bbc6d61f45ae35, type: 3}
+    <Tags>k__BackingField: 02000000
+  - <Name>k__BackingField: soda
+    <Prefab>k__BackingField: {fileID: 919132149155446097, guid: 89664a022ca7b4ea9b7c01a176347863, type: 3}
+    <Price>k__BackingField: 500
+    <Icon>k__BackingField: {fileID: 21300000, guid: eaa943b2756f17749b5c180aca2b61a4, type: 3}
+    <Tags>k__BackingField: 02000000
+  - <Name>k__BackingField: jack_O
+    <Prefab>k__BackingField: {fileID: 919132149155446097, guid: 5a5b86f880eea48cc929f56e8f1fb40c, type: 3}
+    <Price>k__BackingField: 700
+    <Icon>k__BackingField: {fileID: 21300000, guid: aa4427ca51c1e8c4985ac546afacdc73, type: 3}
+    <Tags>k__BackingField: 01000000
+  - <Name>k__BackingField: cross_wood
+    <Prefab>k__BackingField: {fileID: 919132149155446097, guid: 9695f4da8943047f4b8e5a6244eed393, type: 3}
+    <Price>k__BackingField: 900
+    <Icon>k__BackingField: {fileID: 21300000, guid: 77d1ccca94a2f8b459d4240822e571b4, type: 3}
+    <Tags>k__BackingField: 01000000
+  - <Name>k__BackingField: lantern
+    <Prefab>k__BackingField: {fileID: 919132149155446097, guid: ac4a7f60b0e034ea9b7730fea7ef9433, type: 3}
+    <Price>k__BackingField: 500
+    <Icon>k__BackingField: {fileID: 21300000, guid: a1ad2393e7fcbab488b0c6bea8daa77c, type: 3}
+    <Tags>k__BackingField: 01000000
+  - <Name>k__BackingField: coffin
+    <Prefab>k__BackingField: {fileID: 919132149155446097, guid: af0b55ada256641f88685215f0e0ad93, type: 3}
+    <Price>k__BackingField: 800
+    <Icon>k__BackingField: {fileID: 21300000, guid: c416a41d475e81f408c11efc6c595442, type: 3}
+    <Tags>k__BackingField: 01000000
