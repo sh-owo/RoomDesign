@@ -68,6 +68,11 @@ MonoBehaviour:
     <Price>k__BackingField: 500
     <Icon>k__BackingField: {fileID: 21300000, guid: a1ad2393e7fcbab488b0c6bea8daa77c, type: 3}
     <Tags>k__BackingField: 01000000
+  - <Name>k__BackingField: candle
+    <Prefab>k__BackingField: {fileID: 3807469705741027599, guid: d9f1c2902532ea34693a5bd8f9027f53, type: 3}
+    <Price>k__BackingField: 800
+    <Icon>k__BackingField: {fileID: 21300000, guid: 5c8efa84b9fbdb94fa0c9c8a3f68dbfd, type: 3}
+    <Tags>k__BackingField: 01000000
   - <Name>k__BackingField: coffin
     <Prefab>k__BackingField: {fileID: 919132149155446097, guid: af0b55ada256641f88685215f0e0ad93, type: 3}
     <Price>k__BackingField: 800
