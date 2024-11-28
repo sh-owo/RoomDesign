@@ -1,27 +1,25 @@
-using System;
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class InventoryUI : MonoBehaviour
 {
-    [SerializeField] private GameObject inventoryPanel;
-    [SerializeField] private Transform slotHolder;
     [SerializeField] private GameObject slotPrefab;
-
+    [SerializeField] private Transform slotHolder;
     private List<GameObject> slots = new List<GameObject>();
     private GameManager gameManager;
 
-    void Start()
+    private void Start()
     {
         gameManager = GameManager.Instance;
-        gameManager.onInventoryChanged += UpdateInventoryUI;
-        
-        // 초기 UI 설정
+        if (gameManager != null)
+        {
+            gameManager.onInventoryChanged += UpdateInventoryUI;
+        }
+
         UpdateInventoryUI();
     }
-    
 
-    void OnDestroy()
+    private void OnDestroy()
     {
         if (gameManager != null)
         {

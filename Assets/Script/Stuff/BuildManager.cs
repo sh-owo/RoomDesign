@@ -21,13 +21,13 @@ public class BuildManager : MonoBehaviour
     private Renderer previewRenderer;
     private float lastMouseX;
     private bool firstUpdateAfterModeChange = false;
-    
+
     private enum BuildMode
     {
         Placement,
         Rotation
     }
-    
+
     private BuildMode currentMode = BuildMode.Placement;
 
     void Start()
@@ -52,9 +52,9 @@ public class BuildManager : MonoBehaviour
         {
             Debug.LogWarning("No renderer found on preview object!");
         }
-        
+
         DisablePhysics(previewObject);
-        
+
         // 초기 머티리얼 설정
         UpdatePreviewMaterials(validPlacementMaterial);
     }
@@ -69,7 +69,7 @@ public class BuildManager : MonoBehaviour
         {
             collider.isTrigger = true;
         }
-        
+
         // 자식 오브젝트들의 물리 컴포넌트 비활성화
         foreach (Collider collider in obj.GetComponentsInChildren<Collider>())
         {
@@ -95,7 +95,7 @@ public class BuildManager : MonoBehaviour
         if (GameManager.Instance == null) return;
 
         // 선택된 프리팹 변경 감지
-        if (GameManager.Instance.selectedPrefab != null && 
+        if (GameManager.Instance.selectedPrefab != null &&
             (previewObject == null || previewObject.name != GameManager.Instance.selectedPrefab.name + "(Clone)"))
         {
             if (previewObject != null)
@@ -115,7 +115,7 @@ public class BuildManager : MonoBehaviour
             firstUpdateAfterModeChange = true;
             return;
         }
-        
+
         // 회전 모드 전환
         if (Input.GetKeyDown(rotateKey))
         {
@@ -182,103 +182,104 @@ public class BuildManager : MonoBehaviour
 
         float mouseDelta = Input.mousePosition.x - lastMouseX;
         float rotationAmount = mouseDelta * rotationSpeed;
-        
+
         currentPosition = previewObject.transform.position;
         previewObject.transform.Rotate(Vector3.up, rotationAmount);
         lastMouseX = Input.mousePosition.x;
     }
 
-private List<GizmoData> gizmoDataList = new List<GizmoData>();
+    private List<GizmoData> gizmoDataList = new List<GizmoData>();
 
-private struct GizmoData
-{
-    public Vector3 center;
-    public Vector3 size;
-    public Quaternion rotation;
-    public bool hasCollision;
-
-    public GizmoData(Vector3 center, Vector3 size, Quaternion rotation, bool hasCollision)
+    private struct GizmoData
     {
-        this.center = center;
-        this.size = size;
-        this.rotation = rotation;
-        this.hasCollision = hasCollision;
-    }
-}
-bool CheckCollision()
-{
-    if (previewObject == null) return true;
+        public Vector3 center;
+        public Vector3 size;
+        public Quaternion rotation;
+        public bool hasCollision;
 
-    gizmoDataList.Clear();
-    bool hasAnyCollision = false;
-
-    Collider[] previewColliders = previewObject.GetComponentsInChildren<Collider>();
-    foreach (Collider previewCollider in previewColliders)
-    {
-        // BoxCollider인 경우
-        BoxCollider boxCollider = previewCollider as BoxCollider;
-        if (boxCollider != null)
+        public GizmoData(Vector3 center, Vector3 size, Quaternion rotation, bool hasCollision)
         {
-            // 로컬 크기와 중심점을 월드 좌표로 변환
-            Vector3 worldCenter = previewCollider.transform.TransformPoint(boxCollider.center);
-            Vector3 worldSize = Vector3.Scale(boxCollider.size, previewCollider.transform.lossyScale) * 0.8f;
-            
-            Collider[] hitColliders = Physics.OverlapBox(
-                worldCenter,
-                worldSize * 0.5f,  // OverlapBox는 half-extents를 사용하므로 0.5를 곱함
-                previewCollider.transform.rotation,
-                ~ignoreLayers
-            );
-
-            bool currentCollision = false;
-            foreach (Collider hitCollider in hitColliders)
-            {
-                if (hitCollider.gameObject != previewObject && 
-                    !hitCollider.transform.IsChildOf(previewObject.transform) &&
-                    !previewObject.transform.IsChildOf(hitCollider.transform))
-                {
-                    currentCollision = true;
-                    hasAnyCollision = true;
-                    break;
-                }
-            }
-
-            gizmoDataList.Add(new GizmoData(
-                worldCenter,
-                worldSize,
-                previewCollider.transform.rotation,
-                currentCollision
-            ));
+            this.center = center;
+            this.size = size;
+            this.rotation = rotation;
+            this.hasCollision = hasCollision;
         }
     }
-    return hasAnyCollision;
-}
 
-private void OnDrawGizmos()
-{
-    if (!Application.isPlaying) return;
-    
-    foreach (var gizmoData in gizmoDataList)
+    bool CheckCollision()
     {
-        // 충돌이 있으면 빨간색, 없으면 초록색으로 표시
-        Gizmos.color = gizmoData.hasCollision ? 
-            new Color(1, 0, 0, 0.5f) : // 반투명 빨간색
-            new Color(0, 1, 0, 0.5f);  // 반투명 초록색
+        if (previewObject == null) return true;
 
-        Matrix4x4 originalMatrix = Gizmos.matrix;
-        Gizmos.matrix = Matrix4x4.TRS(gizmoData.center, gizmoData.rotation, Vector3.one);
-        
-        // 와이어프레임 박스
-        Gizmos.DrawWireCube(Vector3.zero, gizmoData.size);
-        
-        // 반투명한 실선 박스
-        Gizmos.color = new Color(Gizmos.color.r, Gizmos.color.g, Gizmos.color.b, 0.2f);
-        Gizmos.DrawCube(Vector3.zero, gizmoData.size);
-        
-        Gizmos.matrix = originalMatrix;
+        gizmoDataList.Clear();
+        bool hasAnyCollision = false;
+
+        Collider[] previewColliders = previewObject.GetComponentsInChildren<Collider>();
+        foreach (Collider previewCollider in previewColliders)
+        {
+            // BoxCollider인 경우
+            BoxCollider boxCollider = previewCollider as BoxCollider;
+            if (boxCollider != null)
+            {
+                // 로컬 크기와 중심점을 월드 좌표로 변환
+                Vector3 worldCenter = previewCollider.transform.TransformPoint(boxCollider.center);
+                Vector3 worldSize = Vector3.Scale(boxCollider.size, previewCollider.transform.lossyScale) * 0.8f;
+
+                Collider[] hitColliders = Physics.OverlapBox(
+                    worldCenter,
+                    worldSize * 0.5f,  // OverlapBox는 half-extents를 사용하므로 0.5를 곱함
+                    previewCollider.transform.rotation,
+                    ~ignoreLayers
+                );
+
+                bool currentCollision = false;
+                foreach (Collider hitCollider in hitColliders)
+                {
+                    if (hitCollider.gameObject != previewObject &&
+                        !hitCollider.transform.IsChildOf(previewObject.transform) &&
+                        !previewObject.transform.IsChildOf(hitCollider.transform))
+                    {
+                        currentCollision = true;
+                        hasAnyCollision = true;
+                        break;
+                    }
+                }
+
+                gizmoDataList.Add(new GizmoData(
+                    worldCenter,
+                    worldSize,
+                    previewCollider.transform.rotation,
+                    currentCollision
+                ));
+            }
+        }
+        return hasAnyCollision;
     }
-}
-    
+
+    private void OnDrawGizmos()
+    {
+        if (!Application.isPlaying) return;
+
+        foreach (var gizmoData in gizmoDataList)
+        {
+            // 충돌이 있으면 빨간색, 없으면 초록색으로 표시
+            Gizmos.color = gizmoData.hasCollision ?
+                new Color(1, 0, 0, 0.5f) : // 반투명 빨간색
+                new Color(0, 1, 0, 0.5f);  // 반투명 초록색
+
+            Matrix4x4 originalMatrix = Gizmos.matrix;
+            Gizmos.matrix = Matrix4x4.TRS(gizmoData.center, gizmoData.rotation, Vector3.one);
+
+            // 와이어프레임 박스
+            Gizmos.DrawWireCube(Vector3.zero, gizmoData.size);
+
+            // 반투명한 실선 박스
+            Gizmos.color = new Color(Gizmos.color.r, Gizmos.color.g, Gizmos.color.b, 0.2f);
+            Gizmos.DrawCube(Vector3.zero, gizmoData.size);
+
+            Gizmos.matrix = originalMatrix;
+        }
+    }
+
     private void UpdatePreviewMaterials(Material material)
     {
         if (material == null || previewObject == null) return;
@@ -304,7 +305,7 @@ private void OnDrawGizmos()
         {
             GameObject prefabToPlace = GameManager.Instance.selectedPrefab ?? objectToPlace;
             GameObject placedObject = Instantiate(prefabToPlace, currentPosition, previewObject.transform.rotation);
-            
+
             // 물리 컴포넌트 설정
             Collider mainCollider = placedObject.GetComponent<Collider>();
             if (mainCollider != null)
@@ -319,21 +320,21 @@ private void OnDrawGizmos()
                 childCollider.isTrigger = false;
                 childCollider.enabled = true;
             }
-            
+
             // 레이어 설정
             placedObject.layer = LayerMask.NameToLayer("Objects");
             foreach (Transform child in placedObject.GetComponentsInChildren<Transform>())
             {
                 child.gameObject.layer = LayerMask.NameToLayer("Objects");
             }
-            
+
             // Rigidbody 설정
             Rigidbody[] rigidbodies = placedObject.GetComponentsInChildren<Rigidbody>();
             foreach (Rigidbody rb in rigidbodies)
             {
                 rb.isKinematic = true;
             }
-        
+
             if (placedObject.GetComponent<Rigidbody>() == null)
             {
                 Rigidbody rb = placedObject.AddComponent<Rigidbody>();
@@ -346,22 +347,23 @@ private void OnDrawGizmos()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
-        
+
         if (Physics.Raycast(ray, out hit, maxPlacementDistance))
         {
             GameObject hitObject = hit.collider.gameObject;
             Debug.Log("hit");
             if (hitObject.tag == "Stuff")
             {
+                Debug.Log("removed");
                 // 부모 오브젝트 찾기
                 Transform parent = hitObject.transform;
-                while (parent.parent != null && 
+                while (parent.parent != null &&
                        parent.parent.gameObject.layer == LayerMask.NameToLayer("Objects"))
                 {
                     parent = parent.parent;
                 }
-                
-                Destroy(parent.gameObject);
+                Destroy(hitObject);
+                // Destroy(parent.gameObject);
             }
         }
     }

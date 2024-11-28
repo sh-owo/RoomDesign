@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -14,7 +12,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
     private InventoryUI inventoryUI;
     private bool hasItem = false;
 
-    void Awake()
+    private void Awake()
     {
         inventoryUI = GetComponentInParent<InventoryUI>();
         if (inventoryUI == null)
@@ -33,10 +31,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
 
             if (itemPrefab != null)
             {
-                // 프리팹 설정
                 GameManager.Instance.selectedPrefab = itemPrefab;
-
-                // 게임 모드로 전환
                 GameManager.Instance.SetMode(GameManager.Mode.Game);
                 UIManager.Instance.SetMode(UIMode.Game);
 
@@ -58,7 +53,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
     {
         currentItem = item;
         hasItem = true;
-        itemPrefab = item.Prefab;  // 아이템의 프리팹 설정
+        itemPrefab = item.Prefab;
 
         if (iconImage != null)
         {

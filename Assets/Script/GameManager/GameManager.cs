@@ -1,52 +1,27 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-
-public struct InventoryItem
-{
-    public string Name;
-    public string Tags;
-    public int Count;
-    public Sprite Icon;
-    public GameObject Prefab;
-
-    public InventoryItem(string name, string tags, int count, Sprite icon, GameObject prefab)
-    {
-        Name = name;
-        Tags = tags;
-        Count = count;
-        Icon = icon;
-        Prefab = prefab;
-    }
-}
 
 public class GameManager : MonoBehaviour
 {
     public enum Mode
     {
-        Normal,      // 일반 모드
-        Inventory,   // 아이템창 모드
-        Shop,        // 상점 모드
-        Game         // 게임 모드
+        Normal,
+        Inventory,
+        Shop,
+        Game
     }
-    
-    // 싱글톤 인스턴스
+
     public static GameManager Instance { get; private set; }
 
-    // 현재 모드 관리
     private Mode currentMode = Mode.Normal;
     public Mode CurrentMode => currentMode;
 
-    // 선택된 프리팹 관리
-    public GameObject selectedPrefab;
+    public GameObject selectedPrefab { get; set; }
 
-
-    // 인벤토리 및 게임 상태 관리
     [SerializeField] private ObjectDatabaseSO objectDatabase;
     private List<InventoryItem> inventory = new List<InventoryItem>();
     public IReadOnlyList<InventoryItem> Inventory => inventory;
-    
+
     private int money = 1000;
     public int Money
     {
@@ -61,7 +36,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // 이벤트
     public event System.Action onInventoryChanged;
     public event System.Action<int> onMoneyChanged;
 
@@ -92,8 +66,7 @@ public class GameManager : MonoBehaviour
         {
             currentMode = newMode;
             Debug.Log($"Game mode changed to: {newMode}");
-            
-            // Game 모드가 아닐 때는 선택된 프리팹 초기화
+
             if (newMode != Mode.Game)
             {
                 selectedPrefab = null;
@@ -101,71 +74,46 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void AddItem(string name, string tags, int count, Sprite icon, GameObject prefab)
+    public void AddItem(InventoryItem item)
     {
-        if (count <= 0)
+        var existingItem = inventory.Find(i => i.Name == item.Name);
+        if (existingItem != null)
         {
-            Debug.LogWarning($"Cannot add {count} items to inventory");
-            return;
-        }
-
-        int existingIndex = inventory.FindIndex(item => item.Name == name);
-        
-        if (existingIndex != -1)
-        {
-            var existingItem = inventory[existingIndex];
-            existingItem.Count += count;
-            inventory[existingIndex] = existingItem;
+            existingItem.AddCount(item.Count);
         }
         else
         {
-            inventory.Add(new InventoryItem(name, tags, count, icon, prefab));
+            inventory.Add(item);
         }
 
         onInventoryChanged?.Invoke();
-        Debug.Log($"Added {count} {name}(s) to inventory. Total: {GetItemCount(name)}");
+        Debug.Log($"Added {item.Count} {item.Name}(s) to inventory. Total: {GetItemCount(item.Name)}");
     }
 
     public bool RemoveItem(string name, int count = 1)
     {
-        if (count <= 0)
+        var item = inventory.Find(i => i.Name == name);
+        if (item != null && item.Count >= count)
         {
-            Debug.LogWarning($"Cannot remove {count} items from inventory");
-            return false;
-        }
-
-        int index = inventory.FindIndex(item => item.Name == name);
-        
-        if (index != -1)
-        {
-            var item = inventory[index];
-            if (item.Count >= count)
+            item.RemoveCount(count);
+            if (item.Count == 0)
             {
-                item.Count -= count;
-
-                if (item.Count <= 0)
-                {
-                    inventory.RemoveAt(index);
-                }
-                else
-                {
-                    inventory[index] = item;
-                }
-
-                onInventoryChanged?.Invoke();
-                Debug.Log($"Removed {count} {name}(s) from inventory. Remaining: {GetItemCount(name)}");
-                return true;
+                inventory.Remove(item);
             }
+
+            onInventoryChanged?.Invoke();
+            Debug.Log($"Removed {count} {name}(s) from inventory. Remaining: {GetItemCount(name)}");
+            return true;
         }
-        
+
         Debug.LogWarning($"Failed to remove {count} {name}(s) from inventory: insufficient quantity");
         return false;
     }
 
     public int GetItemCount(string name)
     {
-        int index = inventory.FindIndex(item => item.Name == name);
-        return index != -1 ? inventory[index].Count : 0;
+        var item = inventory.Find(i => i.Name == name);
+        return item != null ? item.Count : 0;
     }
 
     public bool HasItem(string name, int count = 1)
@@ -173,10 +121,9 @@ public class GameManager : MonoBehaviour
         return GetItemCount(name) >= count;
     }
 
-    public InventoryItem? GetItem(string name)
+    public InventoryItem GetItem(string name)
     {
-        int index = inventory.FindIndex(item => item.Name == name);
-        return index != -1 ? inventory[index] : (InventoryItem?)null;
+        return inventory.Find(i => i.Name == name);
     }
 
     public bool AddMoney(int amount)
@@ -186,7 +133,7 @@ public class GameManager : MonoBehaviour
             Debug.LogWarning($"Cannot add negative or zero amount of money: {amount}");
             return false;
         }
-        
+
         Money += amount;
         Debug.Log($"Added {amount} money. New balance: {Money}");
         return true;
@@ -218,13 +165,11 @@ public class GameManager : MonoBehaviour
 
     public void SaveGameState()
     {
-        // TODO: 게임 상태 저장 구현
         Debug.Log("Game state saved");
     }
 
     public void LoadGameState()
     {
-        // TODO: 게임 상태 로드 구현
         Debug.Log("Game state loaded");
     }
 
@@ -233,7 +178,6 @@ public class GameManager : MonoBehaviour
         SaveGameState();
     }
 
-    // 디버그용 메서드
     private void OnValidate()
     {
         if (objectDatabase == null)

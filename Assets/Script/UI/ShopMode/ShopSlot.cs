@@ -65,20 +65,21 @@ public class ShopSlot : MonoBehaviour, IPointerClickHandler
 
     private void TryBuyItem()
     {
-        // 플레이어가 충분한 돈을 가지고 있는지 확인
+        // Check if the player has enough money
         if (GameManager.Instance.Money >= currentItem.Price)
         {
-            // 돈 차감
+            // Deduct money
             GameManager.Instance.Money -= currentItem.Price;
-            
-            // 인벤토리에 아이템 추가
-            GameManager.Instance.AddItem(
+
+            // Create an InventoryItem and add it to the inventory
+            InventoryItem newItem = new InventoryItem(
                 currentItem.Name,
                 currentItem.Tags,
-                1,  // 한 번에 1개씩 구매
+                1,  // Buy one item at a time
                 currentItem.Icon,
                 currentItem.Prefab
             );
+            GameManager.Instance.AddItem(newItem);
 
             Debug.Log($"Purchased: {currentItem.Name} for {currentItem.Price}G");
         }

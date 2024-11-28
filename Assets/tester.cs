@@ -8,8 +8,10 @@ public class Tester : MonoBehaviour
     void Start()
     {
         // 게임 시작할 때 테스트용 아이템 추가
-        GameManager.Instance.AddItem("Test Item 1", "Test", 13, testSprite, null);
-        GameManager.Instance.AddItem("Test Item 2", "Test", 12, another, null);
+        InventoryItem item1 = new InventoryItem("Test Item 1", "Test", 13, testSprite, null);
+        InventoryItem item2 = new InventoryItem("Test Item 2", "Test", 12, another, null);
+        GameManager.Instance.AddItem(item1);
+        GameManager.Instance.AddItem(item2);
     }
 
     void Update()
@@ -17,9 +19,10 @@ public class Tester : MonoBehaviour
         // 테스트용: T 키를 누르면 아이템 추가
         if (Input.GetKeyDown(KeyCode.T))
         {
-            // GameManager.Instance.AddItem("New Item", "Test", 1, testSprite.nu);
-            // GameManager.Instance.AddItem("Test Item 2", "Test", 1, another);
-            
+            InventoryItem newItem = new InventoryItem("New Item", "Test", 1, testSprite, null);
+            InventoryItem anotherItem = new InventoryItem("Test Item 2", "Test", 1, another, null);
+            GameManager.Instance.AddItem(newItem);
+            GameManager.Instance.AddItem(anotherItem);
         }
     }
 }
