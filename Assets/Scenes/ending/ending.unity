@@ -331,7 +331,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02deccdd022b737429700c693d61335b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  displayImage: {fileID: 0}
+  displayImage: {fileID: 1325956156}
   endingCount: 4
   displayTime: 3
 --- !u!1 &921270108
