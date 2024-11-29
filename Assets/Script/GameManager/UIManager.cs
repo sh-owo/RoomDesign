@@ -11,6 +11,7 @@ public enum UIMode
     Shop,
     Game
 }
+
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance { get; private set; }
@@ -29,17 +30,15 @@ public class UIManager : MonoBehaviour
         DontDestroyOnLoad(gameObject); // 씬 전환 시 파괴되지 않음
     }
 
-
     private UIMode currentMode;
-    
+
     [Header("UI")]
     public GameObject normalUI;
     public GameObject sceneMoveUI;
     public GameObject shopUI;
     public GameObject gameUI;
 
-    [Header("MoneyTMP")] public List<TMPro.TextMeshProUGUI> moneyTexts; 
-
+    [Header("MoneyTMP")] public List<TMPro.TextMeshProUGUI> moneyTexts;
 
     void Start()
     {
@@ -49,13 +48,21 @@ public class UIManager : MonoBehaviour
 
     void Update()
     {
+        if (currentMode != (UIMode)GameManager.Instance.CurrentMode)
+        {
+            SetMode((UIMode)GameManager.Instance.CurrentMode);
+        }
+
         if (Input.GetKeyDown(KeyCode.Alpha1)) SetMode(UIMode.Normal);
         if (Input.GetKeyDown(KeyCode.Alpha2)) SetMode(UIMode.SceneMove);
         if (Input.GetKeyDown(KeyCode.Alpha3)) SetMode(UIMode.Shop);
         if (Input.GetKeyDown(KeyCode.Alpha4)) SetMode(UIMode.Game);
-        foreach(var txt in moneyTexts) { txt.text =$"Money:{gameManager.Money.ToString()}"; }
-    }
 
+        foreach (var txt in moneyTexts)
+        {
+            txt.text = $"Money: {gameManager.Money.ToString()}";
+        }
+    }
 
     public void SetMode(UIMode mode)
     {
@@ -71,6 +78,7 @@ public class UIManager : MonoBehaviour
             gameManager.SetMode((GameManager.Mode)mode);
         }
     }
+
     public UIMode GetCurrentMode()
     {
         return currentMode;
