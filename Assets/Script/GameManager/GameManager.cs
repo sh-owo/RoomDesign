@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour
     public enum Mode
     {
         Normal,
-        Inventory,
+        MoveManager,
         Shop,
         Game
     }
@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private ObjectDatabaseSO objectDatabase;
     private List<InventoryItem> inventory = new List<InventoryItem>();
     public IReadOnlyList<InventoryItem> Inventory => inventory;
+    [SerializeField] private GameObject buildManager;
 
     private int money = 1000;
     public int Money
@@ -72,6 +73,14 @@ public class GameManager : MonoBehaviour
                 selectedPrefab = null;
             }
         }
+
+        if (currentMode != Mode.Normal)
+        {
+            BuildManager manager = buildManager.GetComponent<BuildManager>();
+            manager.Disable();
+            buildManager.SetActive(false);
+        }
+        else buildManager.SetActive(true);
     }
 
     public void AddItem(InventoryItem item)
