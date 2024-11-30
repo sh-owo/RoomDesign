@@ -19,9 +19,8 @@ public class Player : MonoBehaviour
 
         speed = FindGameManager.Instance.speed;
         rotationSpeed = FindGameManager.Instance.rotationSpeed;
-        
-        int random = UnityEngine.Random.Range(0, FindGameManager.Instance.spawnPos.Count - 1);
-        Vector3 newPosition = FindGameManager.Instance.spawnPos[random].transform.position;
+       
+        Vector3 newPosition = FindGameManager.Instance.StartPos;
         newPosition.x += 1.5f;
         transform.position = newPosition;
         transform.rotation = Quaternion.Euler(0f, UnityEngine.Random.Range(0f, 360f), 0f);
@@ -29,16 +28,17 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        UpdateCamera();
+        if(!FindGameManager.Instance.isGameStart || FindGameManager.Instance.isGameEnd) {Debug.Log("entry");return;}
+        Debug.Log("doing");
         // 입력 처리
         float x = Input.GetAxis("Horizontal");
         float y = Input.GetAxis("Vertical");
 
         // 이동 및 회전
-        Move(y);
+        Move(y * 0.8f);
         Rotation(x);
 
-        // 카메라 위치 업데이트
-        UpdateCamera();
     }
 
     void Move(float x)
@@ -57,5 +57,15 @@ public class Player : MonoBehaviour
     {
         camera.transform.position = camPos.transform.position;
         camera.transform.rotation = camPos.transform.rotation;
+    }
+    
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.CompareTag("Target"))
+        {
+            FindGameManager.Instance.isPlayerWon = true;
+            FindGameManager.Instance.isGameEnd = true;
+            Debug.Log("Game End!");
+        }
     }
 }

@@ -9,8 +9,10 @@ public class AIAgent : Agent
     private Rigidbody rb;
     private Vector3 startPos;
     private Vector3 targetPos;
+    private bool isAgentActive = false;
+    
     [SerializeField] private GameObject target;
-    [SerializeField] private FindGameManager FindGameManager;
+    
 
     public void Start()
     {
@@ -19,13 +21,31 @@ public class AIAgent : Agent
         targetPos = target.transform.position;
     }
 
+    private void Update()
+    {
+        if(FindGameManager.Instance.isGameEnd) {isAgentActive = false; return; }
+        if (FindGameManager.Instance.isGameStart && !isAgentActive)
+        {
+            isAgentActive = true;
+            OnEpisodeBegin(); 
+        }
+        else if (!FindGameManager.Instance.isGameStart && isAgentActive)
+        {
+            isAgentActive = false;
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+        
+    }
+
     public override void OnEpisodeBegin()
     {
+        if (!isAgentActive) return;
+
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
-        List<GameObject> posList = FindGameManager.spawnPos;
-        int random = UnityEngine.Random.Range(0, posList.Count - 1);
-        transform.position = posList[random].transform.position;
+        List<GameObject> posList = FindGameManager.Instance.spawnPos;
+        transform.position = FindGameManager.Instance.StartPos;
         transform.rotation = Quaternion.Euler(0f, UnityEngine.Random.Range(0f, 360f), 0f);
 
         targetPos = posList[UnityEngine.Random.Range(0, posList.Count - 1)].transform.position;
@@ -34,11 +54,13 @@ public class AIAgent : Agent
 
     public override void CollectObservations(VectorSensor sensor)
     {
+        if(!isAgentActive) return;
         sensor.AddObservation(transform.InverseTransformDirection(rb.velocity));
     }
 
     public override void OnActionReceived(ActionBuffers actions)
     {
+        if(!isAgentActive) return;
         int inputs = actions.DiscreteActions[0];
         Movement(inputs);
 
@@ -47,10 +69,11 @@ public class AIAgent : Agent
 
     public void Movement(int inputs)
     {
+        
         Vector3 move = Vector3.zero;
         Vector3 rotation = Vector3.zero;
-        float speed = FindGameManager.speed;
-        float rotationSpeed = FindGameManager.rotationSpeed;
+        float speed = FindGameManager.Instance.speed;
+        float rotationSpeed = FindGameManager.Instance.rotationSpeed;
 
         switch (inputs)
         {
@@ -74,7 +97,10 @@ public class AIAgent : Agent
         {
             Debug.Log("Reached target");
             AddReward(4f);
-            EndEpisode();
+            FindGameManager.Instance.isPlayerWon = false;
+            FindGameManager.Instance.isGameEnd = true;
+            Debug.Log("Game End!");
+            // EndEpisode();
         }
     }
 
