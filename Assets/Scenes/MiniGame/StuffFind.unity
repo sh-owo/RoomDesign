@@ -1284,8 +1284,6 @@ Transform:
   - {fileID: 1621109862}
   - {fileID: 304973035}
   - {fileID: 1627596290}
-  - {fileID: 1991738747}
-  - {fileID: 2017643372}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &885482939
@@ -2130,8 +2128,8 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 20
-  field of view: 70
+  far clip plane: 18
+  field of view: 65
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -2968,7 +2966,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 118815160}
-  m_Father: {fileID: 839156962}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -3069,7 +3067,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 839156962}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2017643373
 MonoBehaviour:
@@ -3247,7 +3245,7 @@ PrefabInstance:
     - target: {fileID: 5761176202974007772, guid: b1ca3c8e781864aa0ac7d53145f1d46b, type: 3}
       propertyPath: m_Model
       value: 
-      objectReference: {fileID: 5022602860645237092, guid: da01f1e03f5004099abc17cc53f8a912, type: 3}
+      objectReference: {fileID: 5022602860645237092, guid: dca15313d15c349c39396cb2cabf0eb5, type: 3}
     - target: {fileID: 5761176202974007772, guid: b1ca3c8e781864aa0ac7d53145f1d46b, type: 3}
       propertyPath: m_BehaviorType
       value: 0
@@ -3294,4 +3292,6 @@ SceneRoots:
   m_Roots:
   - {fileID: 1136540314}
   - {fileID: 1799431942}
+  - {fileID: 1991738747}
+  - {fileID: 2017643372}
   - {fileID: 839156962}

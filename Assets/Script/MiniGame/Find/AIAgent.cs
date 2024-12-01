@@ -99,7 +99,6 @@ public class AIAgent : Agent
             AddReward(4f);
             FindGameManager.Instance.isPlayerWon = false;
             FindGameManager.Instance.isGameEnd = true;
-            Debug.Log("Game End!");
             // EndEpisode();
         }
     }

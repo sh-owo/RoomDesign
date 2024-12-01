@@ -22,10 +22,10 @@ public class StartUI : MonoBehaviour
     {
         if(FindGameManager.Instance.isGameEnd && FindGameManager.Instance.isPlayerWon)
         {
-            startText.text = $"You Win!({FindGameManager.Instance.prize})";
+            startText.text = $"You Win!(+{FindGameManager.Instance.prize})";
             StartCoroutine(waitSecond());
             //TODO: 씬 넣어놓기
-            SceneManager.LoadScene("TODO");
+            // SceneManager.LoadScene("TODO");
             
         }
         else if(FindGameManager.Instance.isGameEnd && !FindGameManager.Instance.isPlayerWon)
@@ -33,7 +33,7 @@ public class StartUI : MonoBehaviour
             startText.text = "You Lose!";
             StartCoroutine(waitSecond());
             //TODO: 씬 넣어놓기
-            SceneManager.LoadScene("TODO");
+            // SceneManager.LoadScene("TODO");
         }
     }
 

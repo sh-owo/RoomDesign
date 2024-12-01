@@ -29,8 +29,7 @@ public class Player : MonoBehaviour
     void Update()
     {
         UpdateCamera();
-        if(!FindGameManager.Instance.isGameStart || FindGameManager.Instance.isGameEnd) {Debug.Log("entry");return;}
-        Debug.Log("doing");
+        if(!FindGameManager.Instance.isGameStart || FindGameManager.Instance.isGameEnd) { return; }
         // 입력 처리
         float x = Input.GetAxis("Horizontal");
         float y = Input.GetAxis("Vertical");
