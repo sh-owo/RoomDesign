@@ -375,4 +375,9 @@ public class BuildManager : MonoBehaviour
             Destroy(previewObject);
         }
     }
+
+    public void Disable()
+    {
+       Destroy(previewObject);
+    }
 }
