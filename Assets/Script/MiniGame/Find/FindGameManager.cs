@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class FindGameManager : MonoBehaviour
@@ -13,7 +14,15 @@ public class FindGameManager : MonoBehaviour
     
     public bool isGameStart = false;
     public bool isGameEnd = false;
+    public bool isPlayerWon = false;
+
+    [SerializeField] private GameObject messageUI;
     
+    public Vector3 StartPos { get; private set; }
+    public int prize { get; private set; }
+    
+    
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -22,8 +31,33 @@ public class FindGameManager : MonoBehaviour
         }
         else
         {
-            Instance = this; 
+            Instance = this;
         }
+        
     }
     
+    private void Start()
+    {
+        prize = 100 * UnityEngine.Random.Range(3, 7);
+        int random = UnityEngine.Random.Range(0, spawnPos.Count - 1);
+        StartPos = spawnPos[random].transform.position;
+        
+        StartCoroutine(StartGame(3));
+    }
+    
+    private IEnumerator StartGame(int second)
+    {
+        StartUI ui = messageUI.GetComponent<StartUI>();
+        for (int i = second; i > 0; i--)
+        {
+            Debug.Log($"Game starts in {i}...");
+            ui.LoadUI(i);
+            
+            yield return new WaitForSeconds(1);
+        }
+        Debug.Log("Game Start!");
+        ui.Start();
+        
+        isGameStart = true;
+    }
 }
