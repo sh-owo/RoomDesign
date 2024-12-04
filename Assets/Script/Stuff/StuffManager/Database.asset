@@ -78,3 +78,43 @@ MonoBehaviour:
     <Price>k__BackingField: 800
     <Icon>k__BackingField: {fileID: 21300000, guid: c416a41d475e81f408c11efc6c595442, type: 3}
     <Tags>k__BackingField: 01000000
+  - <Name>k__BackingField: bed
+    <Prefab>k__BackingField: {fileID: 5145672551860302234, guid: 64d368dad62db36499317d51f28354a8, type: 3}
+    <Price>k__BackingField: 1300
+    <Icon>k__BackingField: {fileID: 21300000, guid: 51bf81515f30750438cea178d257a9aa, type: 3}
+    <Tags>k__BackingField: 01000000
+  - <Name>k__BackingField: fridge
+    <Prefab>k__BackingField: {fileID: 2764391629211979616, guid: d7b7ba1f0c3b26a408dcd56e7aa785f2, type: 3}
+    <Price>k__BackingField: 1500
+    <Icon>k__BackingField: {fileID: 21300000, guid: 5535c42313ee9ad45a570a82411ab2ac, type: 3}
+    <Tags>k__BackingField: 01000000
+  - <Name>k__BackingField: dresser
+    <Prefab>k__BackingField: {fileID: 6956068769503313017, guid: 2a87c010787017141b97591943684f25, type: 3}
+    <Price>k__BackingField: 1000
+    <Icon>k__BackingField: {fileID: 21300000, guid: f25e99bb3a346eb45888887656caf7fb, type: 3}
+    <Tags>k__BackingField: 01000000
+  - <Name>k__BackingField: lamp
+    <Prefab>k__BackingField: {fileID: 5466896048503348265, guid: c9041ae0bc7e3784283980c09f3a84d7, type: 3}
+    <Price>k__BackingField: 600
+    <Icon>k__BackingField: {fileID: 21300000, guid: 82c683b189f4a224d862af2a9ea2d220, type: 3}
+    <Tags>k__BackingField: 01000000
+  - <Name>k__BackingField: microwave
+    <Prefab>k__BackingField: {fileID: 2200138814815513069, guid: 57de27dea6f279b44b0338d96054d40b, type: 3}
+    <Price>k__BackingField: 800
+    <Icon>k__BackingField: {fileID: 21300000, guid: f644d3c9e9d28574ca01cdc79e794095, type: 3}
+    <Tags>k__BackingField: 01000000
+  - <Name>k__BackingField: washing_machine
+    <Prefab>k__BackingField: {fileID: 8311470214927175682, guid: 0052250e5477ea64da40b62203f464f2, type: 3}
+    <Price>k__BackingField: 1100
+    <Icon>k__BackingField: {fileID: 21300000, guid: 08e36a57fbdbafd40a64e6e398e653d7, type: 3}
+    <Tags>k__BackingField: 01000000
+  - <Name>k__BackingField: coffee_machine
+    <Prefab>k__BackingField: {fileID: 6774362663644287278, guid: c87431c896a6cbe44853be9b80f821c9, type: 3}
+    <Price>k__BackingField: 700
+    <Icon>k__BackingField: {fileID: 21300000, guid: 94e536b739aeeca439a35164dae5da32, type: 3}
+    <Tags>k__BackingField: 01000000
+  - <Name>k__BackingField: tv
+    <Prefab>k__BackingField: {fileID: 3633950533799920729, guid: 2b3f11b6cd65c874b9d480a6a8a8a219, type: 3}
+    <Price>k__BackingField: 2000
+    <Icon>k__BackingField: {fileID: 21300000, guid: 6cd40f012e9b785429f1f10691699acc, type: 3}
+    <Tags>k__BackingField: 01000000
