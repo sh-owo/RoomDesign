@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/RoomDesign.unity
     guid: 759441b90f7f9405195f31943988f7d8
   - enabled: 1
+    path: Assets/Scenes/Map/StartScene.unity
+    guid: 019a26e9f92734be997444c3973e5587
+  - enabled: 1
     path: Assets/Scenes/Map/office/office.unity
     guid: cbda6334f8055f141b7620792f9d6775
   - enabled: 1
@@ -26,4 +29,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MiniGame/Sort.unity
     guid: 5ac11915d91ac4310be325adf45e578e
+  - enabled: 1
+    path: Assets/Scenes/ending/ending.unity
+    guid: c87e43cd4424ca446bb11d178a889991
   m_configObjects: {}
