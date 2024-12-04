@@ -9,36 +9,35 @@ using TMPro;
 [System.Serializable]
 public class Quest
 {
-    public string questName;           // 퀘스트 이름
-    public string questSeries;         // 퀘스트 시리즈
-    public string targetObjectTag;     // 찾을 오브젝트의 태그
-    public int requiredAmount;         // 필요한 오브젝트 수량
-    public bool isCompleted;           // 퀘스트 완료 여부
+    public string questName;           
+    public string questSeries;         
+    public string targetObjectName;    // 변경: tag 대신 오브젝트 이름으로 검색
+    public int requiredAmount;         
+    public bool isCompleted;           
 }
 
 public class QuestMaker : MonoBehaviour
 {
     [SerializeField]
-    private List<Quest> questList = new List<Quest>();  // 퀘스트 목록
+    private List<Quest> questList = new List<Quest>();
 
     [SerializeField]
-    private float checkInterval = 1f;  // 퀘스트 체크 주기
+    private float checkInterval = 1f;
 
     [SerializeField]
-    public string currentQuestSeries = "";  // 현재 활성화된 퀘스트 시리즈
+    public string currentQuestSeries = "";
 
     [SerializeField]
-    private Slider progressSlider;     // 진행률을 표시할 슬라이더
+    private Slider progressSlider;
 
     [SerializeField]
-    private TextMeshProUGUI progressText;   // 진행률을 텍스트로 표시
+    private TextMeshProUGUI progressText;
 
     [SerializeField]
-    private QuestPanelUI questPanel;   // QuestPanelUI 참조
+    private QuestPanelUI questPanel;
 
     private void Start()
     {
-        // 슬라이더 초기화
         if (progressSlider != null)
         {
             progressSlider.minValue = 0f;
@@ -46,18 +45,17 @@ public class QuestMaker : MonoBehaviour
             UpdateProgress();
         }
 
-        // 주기적으로 퀘스트 상태를 체크하는 코루틴 시작
         StartCoroutine(CheckQuestsRoutine());
     }
 
-    // 퀘스트 추가 메소드
-    public void AddQuest(string questName, string questSeries, string targetTag, int amount)
+    // 퀘스트 추가 메소드 수정
+    public void AddQuest(string questName, string questSeries, string targetName, int amount)
     {
         Quest newQuest = new Quest
         {
             questName = questName,
             questSeries = questSeries,
-            targetObjectTag = targetTag,
+            targetObjectName = targetName,
             requiredAmount = amount,
             isCompleted = false
         };
@@ -69,7 +67,6 @@ public class QuestMaker : MonoBehaviour
         }
     }
 
-    // 현재 퀘스트 시리즈 설정
     public void SetCurrentQuestSeries(string series)
     {
         currentQuestSeries = series;
@@ -80,7 +77,6 @@ public class QuestMaker : MonoBehaviour
         }
     }
 
-    // 퀘스트 체크 코루틴
     private IEnumerator CheckQuestsRoutine()
     {
         while (true)
@@ -91,7 +87,6 @@ public class QuestMaker : MonoBehaviour
         }
     }
 
-    // 모든 퀘스트의 상태를 체크
     private void CheckAllQuests()
     {
         foreach (Quest quest in questList)
@@ -104,18 +99,22 @@ public class QuestMaker : MonoBehaviour
         }
     }
 
-    // 개별 퀘스트 진행상황 체크
+    // 개별 퀘스트 진행상황 체크 메소드 수정
     private void CheckQuestProgress(Quest quest)
     {
-        GameObject[] objects = GameObject.FindGameObjectsWithTag(quest.targetObjectTag);
+        GameObject[] allObjects = GameObject.FindObjectsOfType<GameObject>();
+        int count = allObjects.Count(obj => 
+            obj.name.StartsWith(quest.targetObjectName) && 
+            obj.name.EndsWith("(Clone)") &&
+            obj.CompareTag("Object")
+        );
         
-        if (objects.Length >= quest.requiredAmount)
+        if (count >= quest.requiredAmount)
         {
             CompleteQuest(quest);
         }
     }
 
-    // 퀘스트 완료 처리
     private void CompleteQuest(Quest quest)
     {
         quest.isCompleted = true;
@@ -127,7 +126,6 @@ public class QuestMaker : MonoBehaviour
         }
     }
 
-    // 현재 시리즈의 진행률 업데이트
     private void UpdateProgress()
     {
         if (progressSlider == null) return;
@@ -141,7 +139,6 @@ public class QuestMaker : MonoBehaviour
         }
     }
 
-    // 현재 시리즈의 진행률 계산
     private float CalculateSeriesProgress()
     {
         List<Quest> seriesQuests = GetQuestsBySeries(currentQuestSeries);
@@ -152,7 +149,6 @@ public class QuestMaker : MonoBehaviour
         return (float)completedQuests / seriesQuests.Count * 100f;
     }
 
-    // 특정 시리즈의 모든 퀘스트 조회
     public List<Quest> GetQuestsBySeries(string series)
     {
         if (string.IsNullOrEmpty(series))
@@ -160,9 +156,14 @@ public class QuestMaker : MonoBehaviour
         return questList.FindAll(q => q.questSeries == series);
     }
 
-    // 퀘스트 진행상황 확인용 메소드
-    public int GetCurrentAmount(string targetTag)
+    // 현재 오브젝트 수량 확인 메소드 수정
+    public int GetCurrentAmount(string targetName)
     {
-        return GameObject.FindGameObjectsWithTag(targetTag).Length;
+        GameObject[] allObjects = GameObject.FindObjectsOfType<GameObject>();
+        return allObjects.Count(obj => 
+            obj.name.StartsWith(targetName) && 
+            obj.name.EndsWith("(Clone)") &&
+            obj.CompareTag("Object")
+        );
     }
 }

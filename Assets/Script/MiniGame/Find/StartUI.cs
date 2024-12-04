@@ -24,21 +24,19 @@ public class StartUI : MonoBehaviour
         {
             startText.text = $"You Win!(+{FindGameManager.Instance.prize})";
             StartCoroutine(waitSecond());
-            //TODO: 씬 넣어놓기
-            // SceneManager.LoadScene("TODO");
-            
         }
         else if(FindGameManager.Instance.isGameEnd && !FindGameManager.Instance.isPlayerWon)
         {
             startText.text = "You Lose!";
             StartCoroutine(waitSecond());
-            //TODO: 씬 넣어놓기
-            // SceneManager.LoadScene("TODO");
+            
         }
     }
 
     IEnumerator waitSecond()
     {
-        yield return new WaitForSeconds(10);
+        yield return new WaitForSeconds(2);
+        UIManager.Instance.SetMode(UIMode.Normal);
+        SceneManager.LoadScene("Scenes/Map/office/office");
     }
 }

@@ -1825,17 +1825,17 @@ MonoBehaviour:
   questList:
   - questName: Place two
     questSeries: one
-    targetObjectTag: Stuff
+    targetObjectName: 
     requiredAmount: 2
     isCompleted: 0
   - questName: Place three
     questSeries: one
-    targetObjectTag: Stuff
+    targetObjectName: 
     requiredAmount: 2
     isCompleted: 0
   - questName: Place four
     questSeries: two
-    targetObjectTag: Stuff
+    targetObjectName: 
     requiredAmount: 2
     isCompleted: 0
   checkInterval: 1
@@ -2603,7 +2603,6 @@ GameObject:
   m_Component:
   - component: {fileID: 942899062}
   - component: {fileID: 942899061}
-  - component: {fileID: 942899063}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -2640,29 +2639,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &942899063
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 942899060}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ec5f271ae1a94086888247a380d93f6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  questList:
-  - questName: 
-    questSeries: 
-    targetObjectTag: 
-    requiredAmount: 0
-    isCompleted: 0
-  checkInterval: 1
-  currentQuestSeries: 
-  progressSlider: {fileID: 0}
-  progressText: {fileID: 1256806873}
-  questPanel: {fileID: 0}
 --- !u!224 &985034853 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 953498015009031074, guid: 359ecd2fcb7a64b7f953dab4326b71a1, type: 3}

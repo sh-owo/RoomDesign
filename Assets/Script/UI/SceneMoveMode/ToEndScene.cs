@@ -8,14 +8,13 @@ using UnityEngine.UI;
 public class ToEndScene : MonoBehaviour
 {
     [SerializeField] private int NeedMoney = 10000;
-    public int money = GameManager.Instance.Money;
     
     public void LoadEndScene()
     {
+        int money = GameManager.Instance.Money;
         if(money >= NeedMoney)
         {
-            //TODO: 엔딩씬 연결
-            // SceneManager.LoadScene("temp");
+            SceneManager.LoadScene("Scenes/ending/ending");
         }
         else
         {

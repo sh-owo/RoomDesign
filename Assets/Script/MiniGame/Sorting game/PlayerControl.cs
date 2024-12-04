@@ -1,15 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerControl : MonoBehaviour
 {
     public Camera camera = new Camera();
+    public TMPro.TextMeshProUGUI text;
     private GameObject selected; // 현재 선택된 오브젝트
     private List<int> objectList; // 정렬을 위한 리스트
 
     void Start()
     {
+        UIManager.Instance.SetMode((UIMode.Game));
         StartCoroutine(WaitForBookSortObjectNumbers());
     }
 
@@ -107,6 +110,20 @@ public class PlayerControl : MonoBehaviour
             if(objectList[i] > objectList[i + 1]) return;
         }
         Debug.Log("Game Finish");
-        
+
+        WaitForThreeSeconds();
+        int prize = 100 * Random.Range(3, 6);
+        GameManager.Instance.Money += prize;
+        text.text = $"Finished{prize}!";
+        UIManager.Instance.SetMode((UIMode.Normal));
+        SceneManager.LoadScene("Scenes/Map/office/office");
+
     }
+    
+    IEnumerator WaitForThreeSeconds()
+    {
+        yield return new WaitForSeconds(3);
+    }
+    
+    
 }

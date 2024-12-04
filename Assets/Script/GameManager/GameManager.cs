@@ -74,13 +74,16 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        if (currentMode != Mode.Normal)
+        if (buildManager != null)  // buildManager가 존재할 때만 실행
         {
-            BuildManager manager = buildManager.GetComponent<BuildManager>();
-            manager.Disable();
-            buildManager.SetActive(false);
+            if (currentMode != Mode.Normal)
+            {
+                BuildManager manager = buildManager.GetComponent<BuildManager>();
+                manager.Disable();
+                buildManager.SetActive(false);
+            }
+            else buildManager.SetActive(true);
         }
-        else buildManager.SetActive(true);
     }
 
     public void AddItem(InventoryItem item)
