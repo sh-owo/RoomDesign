@@ -16,6 +16,7 @@ public class CameraMovement : MonoBehaviour
 
     private void Awake()
     {
+        if(camera == null) { camera = Camera.main; }
         rb = GetComponent<Rigidbody>();
         camera = GetComponent<Camera>();
         targetPosition = transform.position;
@@ -53,8 +54,5 @@ public class CameraMovement : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision other)
-    {
-        Debug.Log(other.transform.name);
-    }
+
 }
