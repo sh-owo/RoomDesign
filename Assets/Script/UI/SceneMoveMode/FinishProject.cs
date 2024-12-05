@@ -27,7 +27,8 @@ public class FinishProject : MonoBehaviour
         int reward = questMaker.GetReward();
         if (percent == 100)
         {
-            GameManager.Instance.Money += reward; 
+            GameManager.Instance.Money += reward;
+            questMaker.currentQuestSeries = "none";
             SceneManager.LoadScene("Scenes/Map/office/office");
         }
     }

@@ -29,7 +29,7 @@ public class BuildManager : MonoBehaviour
         Rotation
     }
 
-    private BuildMode currentMode = BuildMode.Placement;
+    private BuildMode currentMode = BuildMode.None;
 
     void Start()
     {

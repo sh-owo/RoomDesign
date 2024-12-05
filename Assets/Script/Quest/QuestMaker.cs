@@ -24,8 +24,7 @@ public class QuestMaker : MonoBehaviour
 
     [SerializeField]
     private float checkInterval = 1f;
-
-    [SerializeField]
+    
     public string currentQuestSeries = "";
 
     [SerializeField]
@@ -178,6 +177,9 @@ public class QuestMaker : MonoBehaviour
             .Where(q => q.isCompleted)
             .Sum(q => q.value);
 
+        totalReward += (int)(totalReward * 1.2f);
         return totalReward;
     }
+    
+    
 }

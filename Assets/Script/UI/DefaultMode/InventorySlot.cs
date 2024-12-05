@@ -32,8 +32,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
             if (itemPrefab != null)
             {
                 GameManager.Instance.selectedPrefab = itemPrefab;
-                GameManager.Instance.SetMode(GameManager.Mode.Game);
-                UIManager.Instance.SetMode(UIMode.Game);
+                // GameManager.Instance.SetMode(GameManager.Mode.Game);
 
                 Debug.Log($"Prefab selected and mode changed to Game");
             }

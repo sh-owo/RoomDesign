@@ -9,6 +9,7 @@ public enum UIMode
     Normal,
     SceneMove,
     Shop,
+    MapManager,
     Game
 }
 
@@ -37,6 +38,7 @@ public class UIManager : MonoBehaviour
     public GameObject sceneMoveUI;
     public GameObject shopUI;
     public GameObject gameUI;
+    public GameObject mapUI;
 
     [Header("MoneyTMP")] public List<TMPro.TextMeshProUGUI> moneyTexts;
 
@@ -72,10 +74,12 @@ public class UIManager : MonoBehaviour
         if (sceneMoveUI != null) sceneMoveUI.SetActive(mode == UIMode.SceneMove);
         if (shopUI != null) shopUI.SetActive(mode == UIMode.Shop);
         if (gameUI != null) gameUI.SetActive(mode == UIMode.Game);
+        if(mapUI != null) mapUI.SetActive(mode == UIMode.MapManager);
 
         if (gameManager != null)
         {
             gameManager.SetMode((GameManager.Mode)mode);
         }
     }
+    
 }

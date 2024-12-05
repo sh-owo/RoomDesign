@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
         Normal,
         MoveManager,
         Shop,
+        MapManager,
         Game
     }
 
