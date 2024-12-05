@@ -11,8 +11,9 @@ public class Quest
 {
     public string questName;           
     public string questSeries;         
-    public string targetObjectName;    // 변경: tag 대신 오브젝트 이름으로 검색
-    public int requiredAmount;         
+    public string targetObjectName;    
+    public int requiredAmount;
+    public int value;
     public bool isCompleted;           
 }
 
@@ -48,7 +49,6 @@ public class QuestMaker : MonoBehaviour
         StartCoroutine(CheckQuestsRoutine());
     }
 
-    // 퀘스트 추가 메소드 수정
     public void AddQuest(string questName, string questSeries, string targetName, int amount)
     {
         Quest newQuest = new Quest
@@ -99,14 +99,13 @@ public class QuestMaker : MonoBehaviour
         }
     }
 
-    // 개별 퀘스트 진행상황 체크 메소드 수정
     private void CheckQuestProgress(Quest quest)
     {
         GameObject[] allObjects = GameObject.FindObjectsOfType<GameObject>();
         int count = allObjects.Count(obj => 
             obj.name.StartsWith(quest.targetObjectName) && 
             obj.name.EndsWith("(Clone)") &&
-            obj.CompareTag("Object")
+            obj.layer == LayerMask.NameToLayer("Object")  // Tag 대신 Layer 사용
         );
         
         if (count >= quest.requiredAmount)
@@ -156,14 +155,29 @@ public class QuestMaker : MonoBehaviour
         return questList.FindAll(q => q.questSeries == series);
     }
 
-    // 현재 오브젝트 수량 확인 메소드 수정
     public int GetCurrentAmount(string targetName)
     {
         GameObject[] allObjects = GameObject.FindObjectsOfType<GameObject>();
         return allObjects.Count(obj => 
             obj.name.StartsWith(targetName) && 
             obj.name.EndsWith("(Clone)") &&
-            obj.CompareTag("Object")
+            obj.layer == LayerMask.NameToLayer("Object")  // Tag 대신 Layer 사용
         );
+    }
+    
+    public int GetPercent() => (int)progressSlider.value;
+    
+    public int GetReward()
+    {
+        List<Quest> seriesQuests = GetQuestsBySeries(currentQuestSeries);
+    
+        if (seriesQuests.Count == 0) return 0;
+
+        // 현재 시리즈의 완료된 퀘스트들의 value 합계 계산
+        int totalReward = seriesQuests
+            .Where(q => q.isCompleted)
+            .Sum(q => q.value);
+
+        return totalReward;
     }
 }

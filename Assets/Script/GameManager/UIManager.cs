@@ -78,9 +78,4 @@ public class UIManager : MonoBehaviour
             gameManager.SetMode((GameManager.Mode)mode);
         }
     }
-
-    public UIMode GetCurrentMode()
-    {
-        return currentMode;
-    }
 }

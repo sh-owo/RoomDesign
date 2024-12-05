@@ -24,6 +24,7 @@ public class BuildManager : MonoBehaviour
 
     private enum BuildMode
     {
+        None,
         Placement,
         Rotation
     }
@@ -89,73 +90,112 @@ public class BuildManager : MonoBehaviour
             Destroy(mainRb);
         }
     }
+    
+void Update()
+{
+    if (GameManager.Instance == null) return;
 
-    void Update()
+    // 선택된 프리팹 변경 감지
+    if (GameManager.Instance.selectedPrefab != null &&
+        (previewObject == null || previewObject.name != GameManager.Instance.selectedPrefab.name + "(Clone)"))
     {
-        if (GameManager.Instance == null) return;
-
-        // 선택된 프리팹 변경 감지
-        if (GameManager.Instance.selectedPrefab != null &&
-            (previewObject == null || previewObject.name != GameManager.Instance.selectedPrefab.name + "(Clone)"))
+        if (previewObject != null)
         {
+            Destroy(previewObject);
+        }
+        previewObject = Instantiate(GameManager.Instance.selectedPrefab);
+        previewRenderer = previewObject.GetComponent<Renderer>();
+        DisablePhysics(previewObject);
+        UpdatePreviewMaterials(validPlacementMaterial);
+    }
+
+    // None 모드에서 F키를 눌러 Placement 모드로 전환
+    if (currentMode == BuildMode.None)
+    {
+        if (Input.GetKeyDown(placeKey))
+        {
+            currentMode = BuildMode.Placement;
             if (previewObject != null)
             {
-                Destroy(previewObject);
+                previewObject.SetActive(true);
             }
-            previewObject = Instantiate(GameManager.Instance.selectedPrefab);
-            previewRenderer = previewObject.GetComponent<Renderer>();
-            DisablePhysics(previewObject);
-            UpdatePreviewMaterials(validPlacementMaterial);
+            firstUpdateAfterModeChange = true;
+            return;
         }
+        return;  // None 모드에서는 다른 처리를 하지 않음
+    }
 
-        // ESC로 회전 모드 빠져나오기
-        if (Input.GetKeyDown(KeyCode.Escape) && currentMode == BuildMode.Rotation)
+    // Placement 모드에서 ESC 키로 None 모드로 전환
+    if (Input.GetKeyDown(KeyCode.Escape))
+    {
+        if (currentMode == BuildMode.Placement)
+        {
+            currentMode = BuildMode.None;
+            if (previewObject != null)
+            {
+                previewObject.SetActive(false);
+            }
+            return;
+        }
+        else if (currentMode == BuildMode.Rotation)
         {
             currentMode = BuildMode.Placement;
             firstUpdateAfterModeChange = true;
             return;
         }
+    }
 
-        // 회전 모드 전환
-        if (Input.GetKeyDown(rotateKey))
+    // Remove 키를 눌러 오브젝트 제거 및 None 모드로 전환
+    if (Input.GetKeyDown(removeKey))
+    {
+        RemoveObject();
+        currentMode = BuildMode.None;
+        if (previewObject != null)
         {
-            currentMode = BuildMode.Rotation;
-            lastMouseX = Input.mousePosition.x;
-            return;
+            previewObject.SetActive(false);
         }
+        return;
+    }
 
-        // 오브젝트 제거
-        if (Input.GetKeyDown(KeyCode.V))
-        {
-            Debug.Log("Remove object");
-            RemoveObject();
-        }
+    // 회전 모드 전환
+    if (Input.GetKeyDown(rotateKey) && currentMode == BuildMode.Placement)
+    {
+        currentMode = BuildMode.Rotation;
+        lastMouseX = Input.mousePosition.x;
+        return;
+    }
 
-        // 배치 모드이고 첫 업데이트가 아닐 때만 위치 업데이트
-        if (currentMode == BuildMode.Placement && !firstUpdateAfterModeChange)
-        {
-            UpdatePosition();
-        }
+    // 배치 모드이고 첫 업데이트가 아닐 때만 위치 업데이트
+    if (currentMode == BuildMode.Placement && !firstUpdateAfterModeChange)
+    {
+        UpdatePosition();
+    }
 
-        // 첫 업데이트 플래그 리셋
-        firstUpdateAfterModeChange = false;
+    // 첫 업데이트 플래그 리셋
+    firstUpdateAfterModeChange = false;
 
-        // 모드에 따른 처리
-        switch (currentMode)
-        {
-            case BuildMode.Placement:
-                HandlePlacement();
-                break;
-            case BuildMode.Rotation:
-                HandleRotation();
-                HandlePlacement();
-                break;
-        }
+    // 모드에 따른 처리
+    switch (currentMode)
+    {
+        case BuildMode.None:
+            // None 모드에서는 추가 처리 없음
+            break;
+        case BuildMode.Placement:
+            HandlePlacement();
+            break;
+        case BuildMode.Rotation:
+            HandleRotation();
+            HandlePlacement();
+            break;
+    }
 
-        // 충돌 체크 및 머티리얼 업데이트
+    // None 모드가 아닐 때만 충돌 체크 및 머티리얼 업데이트
+    if (currentMode != BuildMode.None)
+    {
         canPlace = !CheckCollision();
         UpdatePreviewMaterials(canPlace ? validPlacementMaterial : invalidPlacementMaterial);
     }
+}
 
     void UpdatePosition()
     {
@@ -348,11 +388,11 @@ public class BuildManager : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit, maxPlacementDistance))
+        if (Physics.Raycast(ray, out hit, maxPlacementDistance, LayerMask.NameToLayer("Placing")))
         {
             GameObject hitObject = hit.collider.gameObject;
             Debug.Log("hit");
-            if (hitObject.tag == "Stuff")
+            if (hitObject.layer == LayerMask.NameToLayer("Objects"))
             {
                 Debug.Log("removed");
                 // 부모 오브젝트 찾기
