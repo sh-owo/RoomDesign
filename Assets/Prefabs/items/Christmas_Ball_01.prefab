@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Christmas_Ball_01
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 71ad53543b15c3745afc1107fe28b9d1, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 71ad53543b15c3745afc1107fe28b9d1, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.9944

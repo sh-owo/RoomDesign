@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Christmas_Candy_04
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: fcd353dc7296d4e48b3460a602ea0257, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: fcd353dc7296d4e48b3460a602ea0257, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.2179729

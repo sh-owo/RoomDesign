@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Christmas_Tree_V1_00
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: d610123bf820bda4892639ab406a04af, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: d610123bf820bda4892639ab406a04af, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.9944

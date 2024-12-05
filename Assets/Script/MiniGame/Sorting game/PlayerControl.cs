@@ -112,17 +112,18 @@ public class PlayerControl : MonoBehaviour
         Debug.Log("Game Finish");
 
         WaitForThreeSeconds();
-        int prize = 100 * Random.Range(3, 6);
-        GameManager.Instance.Money += prize;
-        text.text = $"Finished{prize}!";
-        UIManager.Instance.SetMode((UIMode.Normal));
-        SceneManager.LoadScene("Scenes/Map/office/office");
+
 
     }
     
     IEnumerator WaitForThreeSeconds()
     {
         yield return new WaitForSeconds(3);
+        int prize = 100 * Random.Range(3, 6);
+        GameManager.Instance.Money += prize;
+        text.text = $"Finished{prize}!";
+        UIManager.Instance.SetMode((UIMode.Normal));
+        SceneManager.LoadScene("Scenes/Map/office/office");
     }
     
     
