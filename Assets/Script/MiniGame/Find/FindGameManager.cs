@@ -38,6 +38,7 @@ public class FindGameManager : MonoBehaviour
     
     private void Start()
     {
+        UIManager.Instance.SetMode(UIMode.Game);
         prize = 100 * UnityEngine.Random.Range(3, 7);
         int random = UnityEngine.Random.Range(0, spawnPos.Count - 1);
         StartPos = spawnPos[random].transform.position;
@@ -47,7 +48,7 @@ public class FindGameManager : MonoBehaviour
     
     private IEnumerator StartGame(int second)
     {
-        StartUI ui = messageUI.GetComponent<StartUI>();
+        FindGameUI ui = messageUI.GetComponent<FindGameUI>();
         for (int i = second; i > 0; i--)
         {
             Debug.Log($"Game starts in {i}...");

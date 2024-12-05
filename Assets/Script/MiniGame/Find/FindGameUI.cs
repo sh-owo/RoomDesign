@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class StartUI : MonoBehaviour
+public class FindGameUI : MonoBehaviour
 {
     [SerializeField] private TMPro.TextMeshProUGUI startText;
 
@@ -36,7 +36,8 @@ public class StartUI : MonoBehaviour
     IEnumerator waitSecond()
     {
         yield return new WaitForSeconds(2);
-        UIManager.Instance.SetMode(UIMode.Normal);
+        UIManager.Instance.SetMode(UIMode.Normal); 
+        if(FindGameManager.Instance.isPlayerWon)GameManager.Instance.Money += FindGameManager.Instance.prize;
         SceneManager.LoadScene("Scenes/Map/office/office");
     }
 }
