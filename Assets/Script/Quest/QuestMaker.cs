@@ -101,6 +101,10 @@ public class QuestMaker : MonoBehaviour
     private void CheckQuestProgress(Quest quest)
     {
         GameObject[] allObjects = GameObject.FindObjectsOfType<GameObject>();
+        foreach(var obj in allObjects)
+        {
+            Debug.Log(obj.name);
+        }
         int count = allObjects.Count(obj => 
             obj.name.StartsWith(quest.targetObjectName) && 
             obj.name.EndsWith("(Clone)") &&

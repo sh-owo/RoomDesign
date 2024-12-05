@@ -30,6 +30,20 @@ public class BuildManager : MonoBehaviour
     }
 
     private BuildMode currentMode = BuildMode.None;
+    
+    public static BuildManager Instance { get; private set; }
+    private void Awake()
+    {
+        // 싱글톤 인스턴스 설정
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject); // 이미 인스턴스가 있으면 새로 생성된 객체를 파괴
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject); // 씬 전환 시 파괴되지 않음
+    }
 
     void Start()
     {
@@ -44,7 +58,7 @@ public class BuildManager : MonoBehaviour
         else
         {
             Debug.LogError("No object to place assigned!");
-            enabled = false;
+            enabled = true;
             return;
         }
 
@@ -55,9 +69,11 @@ public class BuildManager : MonoBehaviour
         }
 
         DisablePhysics(previewObject);
-
-        // 초기 머티리얼 설정
         UpdatePreviewMaterials(validPlacementMaterial);
+    
+        // 추가된 부분
+        currentMode = BuildMode.Placement;
+        previewObject.SetActive(true);
     }
 
     void DisablePhysics(GameObject obj)
@@ -97,7 +113,7 @@ void Update()
 
     // 선택된 프리팹 변경 감지
     if (GameManager.Instance.selectedPrefab != null &&
-        (previewObject == null || previewObject.name != GameManager.Instance.selectedPrefab.name + "(Clone)"))
+        (previewObject == null || previewObject.name != GameManager.Instance.selectedPrefab.name + " (C lone)"))
     {
         if (previewObject != null)
         {
@@ -152,7 +168,7 @@ void Update()
         currentMode = BuildMode.None;
         if (previewObject != null)
         {
-            previewObject.SetActive(false);
+            // previewObject.SetActive(false);
         }
         return;
     }
@@ -416,8 +432,24 @@ void Update()
         }
     }
 
-    public void Disable()
+    // public void Disable()
+    // {
+       // Destroy(previewObject);
+    // }
+    
+    public void Enable()
     {
-       Destroy(previewObject);
+        currentMode = BuildMode.None;
+        Start();  // Reinitialize the preview object
     }
+
+    // public void Disable()
+    // {
+    //     currentMode = BuildMode.None;
+    //     if (previewObject != null)
+    //     {
+    //         Destroy(previewObject);
+    //         previewObject = null;
+    //     }
+    // }
 }

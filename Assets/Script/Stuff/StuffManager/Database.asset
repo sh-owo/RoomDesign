@@ -22,7 +22,7 @@ MonoBehaviour:
     <Prefab>k__BackingField: {fileID: 2231935612881578003, guid: eed08cd3f778eac4ca8635f6103a60c6, type: 3}
     <Price>k__BackingField: 1500
     <Icon>k__BackingField: {fileID: 21300000, guid: da1beccb1d501d449bb7406a2c92751c, type: 3}
-    <Tags>k__BackingField: 01000000
+    <Tags>k__BackingField: 0100000000000000
   - <Name>k__BackingField: candy_cane
     <Prefab>k__BackingField: {fileID: 8420629523746166598, guid: e7e440c9332d01046aedb2444fe815af, type: 3}
     <Price>k__BackingField: 500

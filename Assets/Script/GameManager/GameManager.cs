@@ -24,7 +24,12 @@ public class GameManager : MonoBehaviour
     public IReadOnlyList<InventoryItem> Inventory => inventory;
     [SerializeField] private GameObject buildManager;
 
-    private int money = 1000;
+    void Update()
+    {
+        buildManager.SetActive(true);
+    }
+
+    public int money = 1000;
     public int Money
     {
         get => money;
@@ -62,6 +67,33 @@ public class GameManager : MonoBehaviour
         selectedPrefab = null;
     }
 
+    /*public void SetMode(Mode newMode)
+    {
+        if (currentMode != newMode)
+        {
+            currentMode = newMode;
+            Debug.Log($"Game mode changed to: {newMode}");
+
+            if (newMode != Mode.Game)
+            {
+                selectedPrefab = null;
+            }
+        }
+
+        if (buildManager != null)
+        {
+            BuildManager manager = buildManager.GetComponent<BuildManager>();
+            if (currentMode == Mode.Normal || currentMode == Mode.Game)
+            {
+                buildManager.SetActive(true);
+            }
+            else
+            {
+                manager.Disable();
+                buildManager.SetActive(false);
+            }
+        }
+    }*/
     public void SetMode(Mode newMode)
     {
         if (currentMode != newMode)
@@ -75,15 +107,9 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        if (buildManager != null)  // buildManager가 존재할 때만 실행
+        if (buildManager != null)
         {
-            if (currentMode != Mode.Normal)
-            {
-                BuildManager manager = buildManager.GetComponent<BuildManager>();
-                manager.Disable();
-                buildManager.SetActive(false);
-            }
-            else buildManager.SetActive(true);
+            buildManager.SetActive(true);
         }
     }
 
