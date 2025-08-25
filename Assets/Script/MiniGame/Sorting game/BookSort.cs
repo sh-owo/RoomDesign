@@ -7,7 +7,7 @@ public class BookSort : MonoBehaviour
     public GameObject objectPrefab; 
     public GameObject booksParent;
     
-    private int objectCount = 30;
+    private int objectCount = 20;
     public static List<int> objectNumbers = new List<int>();
     private int placed = 0;
     private const int rowSize = 10;

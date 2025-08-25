@@ -118,11 +118,7 @@ public class PlayerControl : MonoBehaviour
     
     IEnumerator WaitForThreeSeconds()
     {
-        yield return new WaitForSeconds(3);
-        int prize = 100 * Random.Range(3, 6);
-        GameManager.Instance.Money += prize;
-        text.text = $"Finished{prize}!";
-        UIManager.Instance.SetMode((UIMode.Normal));
+        yield return new WaitForSeconds(1);
         SceneManager.LoadScene("Scenes/Map/office/office");
     }
     

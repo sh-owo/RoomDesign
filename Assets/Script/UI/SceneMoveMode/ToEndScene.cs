@@ -13,7 +13,7 @@ public class ToEndScene : MonoBehaviour
     void Update()
     {
         int money = GameManager.Instance.Money;
-        button.interactable = (money <= NeedMoney);
+        button.interactable = (money >= NeedMoney);
     }
 
     public void LoadEndScene()
@@ -21,6 +21,7 @@ public class ToEndScene : MonoBehaviour
         int money = GameManager.Instance.Money;
         if(money >= NeedMoney)
         {
+            UIManager.Instance.SetMode(UIMode.Game);
             SceneManager.LoadScene("Scenes/ending/ending");
         }
         else
